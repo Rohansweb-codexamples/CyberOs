@@ -3,157 +3,176 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CyberOS v2</title>
+<title>CyberOS v3.0 — Linux Edition</title>
 <meta name="theme-color" content="#050812">
 <style>
-:root{--cyan:#00f6ff;--pink:#ff2bd6;--lime:#a6ff00;--theme-bg:#02040a;--bg:#050812;--panel:rgba(7,14,30,.88);--line:rgba(0,246,255,.28);--text:#eaffff;--muted:#83a9b7}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02040a;color:var(--text);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif}
-body{background:radial-gradient(circle at 20% 10%,rgba(0,246,255,.13),transparent 30%),radial-gradient(circle at 80% 80%,rgba(255,43,214,.11),transparent 28%),#02040a}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(0,246,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,246,255,.08) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent)}
-button,input,select{font:inherit}button{color:var(--text);border:1px solid var(--line);background:rgba(5,13,28,.86);cursor:pointer}
-button:hover{border-color:var(--cyan);box-shadow:0 0 18px rgba(0,246,255,.18)}button:active{transform:translateY(1px)}
-#boot{position:fixed;inset:0;z-index:9999;background:#02040a;display:none;place-items:center}.bootbox{width:min(650px,90vw);font-family:ui-monospace,monospace;color:var(--cyan)}.bar{height:8px;border:1px solid var(--cyan);margin-top:16px}.bar i{display:block;height:100%;width:0;background:var(--cyan);box-shadow:0 0 15px var(--cyan);animation:boot 1.5s forwards}@keyframes boot{to{width:100%}}
-#desktop{position:fixed;inset:0 0 54px 0}.wall{position:absolute;inset:0;overflow:hidden}
-.orb{position:absolute;border-radius:50%;filter:blur(2px);opacity:.45;animation:float 12s ease-in-out infinite}.o1{width:260px;height:260px;background:var(--cyan);left:5%;top:8%;box-shadow:0 0 100px var(--cyan)}.o2{width:300px;height:300px;background:var(--pink);right:2%;bottom:5%;box-shadow:0 0 110px var(--pink);animation-delay:-5s}@keyframes float{50%{transform:translate(60px,-30px) scale(1.12)}}
-#top{position:absolute;left:16px;right:16px;top:12px;height:50px;display:flex;align-items:center;justify-content:space-between;z-index:20}.brand{font-weight:900;letter-spacing:3px;color:var(--cyan);text-shadow:0 0 14px rgba(0,246,255,.55)}.status{display:flex;gap:8px;align-items:center}.chip{padding:8px 11px;border:1px solid var(--line);background:rgba(2,8,18,.7);font-size:12px}
-#icons{position:absolute;top:82px;left:18px;display:grid;grid-template-columns:repeat(2,88px);gap:12px;z-index:5}.appicon{height:82px;border-radius:12px;padding:8px;display:grid;place-items:center;text-align:center;font-size:11px;transition:.2s}.appicon .ico{font-size:25px;color:var(--cyan);font-weight:900}.appicon:hover{transform:translateY(-3px);background:rgba(0,246,255,.08)}
-.window{position:absolute;display:none;flex-direction:column;width:min(850px,calc(100vw - 34px));height:min(610px,calc(100vh - 110px));min-width:280px;min-height:180px;background:var(--panel);border:1px solid var(--cyan);box-shadow:0 0 22px var(--cyan),0 0 55px rgba(255,43,214,.18),inset 0 0 35px rgba(0,246,255,.05);backdrop-filter:blur(14px);border-radius:8px;overflow:hidden;z-index:30}.window.open{display:flex;animation:open .16s ease-out;contain:layout paint}.window .content{overflow:auto;overscroll-behavior:contain}.window iframe{display:block;max-width:100%;max-height:100%;overflow:hidden}@keyframes open{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}.window.active{z-index:100}.titlebar{height:42px;flex:none;display:flex;align-items:center;gap:10px;padding:0 10px;background:linear-gradient(90deg,rgba(0,246,255,.12),rgba(255,43,214,.08));border-bottom:1px solid var(--line);cursor:grab}.titlebar:active{cursor:grabbing}.title{font-weight:800;letter-spacing:1px;flex:1}.winbtn{width:31px;height:27px;border-radius:4px}.close{border-color:rgba(255,60,100,.55)}.close:hover{border-color:#ff4f78;background:rgba(255,60,100,.14)}.content{flex:1;min-height:0;overflow:auto;padding:16px}.content::-webkit-scrollbar{width:7px}.content::-webkit-scrollbar-thumb{background:rgba(0,246,255,.3)}
-.card{border:1px solid var(--line);background:rgba(2,8,20,.62);padding:14px;border-radius:7px;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.cyberbtn{padding:11px 14px;border-radius:5px;text-transform:uppercase;letter-spacing:1px;font-weight:700}.field{display:grid;gap:6px;margin:10px 0}.field input,.field select{width:100%;padding:11px;border:1px solid var(--line);background:#030812;color:var(--text);outline:none;border-radius:4px}.field input:focus{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,246,255,.12)}.muted{color:var(--muted);font-size:13px}.neon{color:var(--cyan);text-shadow:0 0 12px rgba(0,246,255,.5)}.pink{color:var(--pink)}.big{font-size:28px;font-weight:900}.stat{font-size:12px;color:var(--muted);letter-spacing:1px}.list{display:grid;gap:8px}.listrow{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(0,246,255,.16);background:rgba(0,246,255,.025)}.listrow span:first-child{flex:1}
-#taskbar{position:fixed;z-index:500;left:0;right:0;bottom:0;height:54px;background:rgba(2,6,15,.94);border-top:1px solid var(--line);display:flex;align-items:center;gap:7px;padding:7px 10px;backdrop-filter:blur(14px)}#start{height:40px;width:48px;font-weight:900;color:var(--cyan);font-size:18px}.tasks{display:flex;gap:6px;overflow:auto;flex:1}.task{height:38px;min-width:120px;padding:0 12px}.clock{font-family:ui-monospace,monospace;color:var(--cyan);padding:0 8px}
-#startmenu{position:fixed;z-index:600;left:10px;bottom:62px;width:min(390px,calc(100vw - 20px));max-height:75vh;overflow:auto;display:none;background:rgba(3,8,20,.97);border:1px solid var(--cyan);box-shadow:0 0 35px rgba(0,246,255,.25);padding:14px}.search{padding:12px;width:100%;margin-bottom:12px;background:#020711;border:1px solid var(--line);color:var(--text)}.menuapps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-#setupOverlay{position:fixed;inset:0;z-index:900;background:rgba(1,3,8,.97);display:none;place-items:center;padding:20px}.setup{width:min(720px,96vw);max-height:92vh;overflow:auto;border:1px solid var(--cyan);background:linear-gradient(145deg,rgba(5,15,32,.98),rgba(20,4,26,.98));padding:26px;box-shadow:0 0 60px rgba(0,246,255,.2)}.steps{display:flex;gap:6px;margin-bottom:20px}.step{height:5px;flex:1;background:#14202a}.step.on{background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
-.themegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.themebtn{min-height:72px;padding:10px;text-align:left;border:1px solid var(--line);border-radius:8px}.themebtn strong{display:block}.themebtn small{color:var(--muted)}.appdash{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.appdash .card{min-height:120px}.business{border-left:3px solid var(--pink);padding-left:12px}
-body.mobile #icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px}.mobile #icons .appicon{height:65px}.mobile .window{left:8px!important;top:62px!important;width:calc(100vw - 16px)!important;height:calc(100vh - 126px)!important;min-width:0}.mobile .titlebar{height:46px}.mobile #top{left:8px;right:8px}.mobile .chip.hide-mobile{display:none}
-@media(max-width:650px){#icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px;gap:6px}.appicon{height:65px}.appicon .ico{font-size:20px}.brand{font-size:13px}.status .chip:nth-child(2){display:none}.window{left:8px!important;top:68px!important;width:calc(100vw - 16px)!important;height:calc(100vh - 130px)!important}.titlebar{height:44px}.content{padding:11px}}
+:root{--cyan:#00f6ff;--pink:#ff2bd6;--lime:#a6ff00;--theme-bg:#02040a;--bg:#050812;--glass:rgba(22,26,36,.5);--glass-strong:rgba(18,22,32,.7);--line:rgba(255,255,255,.1);--text:#eaffff;--muted:#83a9b7;--accent:#00f6ff;--radius:14px}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;color:var(--text);font-family:'Ubuntu','Segoe UI',Inter,system-ui,Arial,sans-serif}
+body{background:linear-gradient(135deg,#0a1530 0%,#0d1030 40%,#1a0a2e 70%,#050514 100%)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;background-image:linear-gradient(rgba(0,246,255,.2) 1px,transparent 1px),linear-gradient(90deg,rgba(0,246,255,.2) 1px,transparent 1px);background-size:48px 48px}
+button,input,select,textarea{font:inherit}button{color:var(--text);border:1px solid var(--line);background:rgba(255,255,255,.05);cursor:pointer;transition:.12s;border-radius:8px}button:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}button:active{transform:translateY(1px)}
+
+/* ── Boot Screen ── */
+#boot{position:fixed;inset:0;z-index:9999;background:#050514;display:none;place-items:center;font-family:ui-monospace,monospace}.bootbox{width:min(680px,92vw);color:var(--lime)}.boot-logo{font-size:22px;font-weight:700;color:var(--cyan);letter-spacing:2px;margin-bottom:8px}.bootbar{height:4px;border:1px solid var(--cyan);border-radius:4px;margin:12px 0;overflow:hidden}.bootbar i{display:block;height:100%;width:0;background:var(--cyan);border-radius:4px;animation:boot 2s forwards}@keyframes boot{to{width:100%}}#bootlog{font-size:12px;line-height:1.8;max-height:260px;overflow:auto;color:var(--lime);opacity:.8}#bootlog .ok{color:var(--lime)}#bootlog .err{color:var(--pink)}
+
+/* ── Desktop ── */
+#desktop{position:fixed;inset:0 0 0 72px;z-index:0}
+.wall{position:absolute;inset:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.2;animation:float 14s ease-in-out infinite}.o1{width:360px;height:360px;background:var(--cyan);left:8%;top:8%}.o2{width:420px;height:420px;background:var(--pink);right:5%;bottom:8%;animation-delay:-6s}@keyframes float{50%{transform:translate(50px,-30px) scale(1.12)}}
+
+/* ── Desktop Icons ── */
+#icons{position:absolute;top:70px;right:18px;display:grid;grid-template-columns:repeat(auto-fill,90px);gap:6px;z-index:5;max-height:calc(100vh - 150px);overflow:auto;padding:4px}
+.appicon{height:84px;border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;font-size:11px;transition:.15s;background:transparent;border:none}
+.appicon .ico{font-size:24px;color:var(--cyan);font-weight:900;width:42px;height:42px;display:grid;place-items:center;border-radius:11px;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--line);margin-bottom:2px}
+.appicon:hover{background:rgba(255,255,255,.08);border-radius:10px}.appicon:hover .ico{background:rgba(0,246,255,.15);border-color:var(--cyan)}
+
+/* ── Windows ── */
+.window{position:absolute;display:none;flex-direction:column;width:min(820px,calc(100vw - 120px));height:min(580px,calc(100vh - 120px));min-width:280px;min-height:180px;background:var(--glass-strong);border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 64px rgba(0,0,0,.5);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-radius:var(--radius);overflow:hidden;z-index:30}
+.window.open{display:flex;animation:open .18s cubic-bezier(.2,.9,.3,1.1);contain:layout paint}@keyframes open{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:none}}
+.window.active{z-index:100;box-shadow:0 28px 72px rgba(0,0,0,.6),0 0 0 1px rgba(0,246,255,.3)}
+.window .content{overflow:auto;overscroll-behavior:contain}
+.window iframe{display:block;max-width:100%;max-height:100%;overflow:hidden}
+.titlebar{height:42px;flex:none;display:flex;align-items:center;gap:8px;padding:0 10px 0 14px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);cursor:default;border-radius:var(--radius) var(--radius) 0 0}
+.titlebar:active{cursor:grabbing}
+.title{font-weight:600;font-size:13px;flex:1;letter-spacing:.3px;color:rgba(255,255,255,.9)}
+.win-controls{display:flex;height:100%;gap:4px;align-items:center}
+.winbtn{width:34px;height:30px;border:none;border-radius:8px;background:transparent;display:grid;place-items:center;font-size:12px;color:rgba(255,255,255,.6);transition:.1s}
+.winbtn:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9)}
+.winbtn.close:hover{background:#e81123;color:#fff}
+.content{flex:1;min-height:0;overflow:auto;padding:16px}
+.content::-webkit-scrollbar{width:8px}.content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}.content::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.35)}
+
+/* ── Content Styles ── */
+.card{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:14px;border-radius:10px;margin-bottom:12px;backdrop-filter:blur(10px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.cyberbtn{padding:10px 16px;border-radius:8px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;font-size:12px}
+.field{display:grid;gap:6px;margin:10px 0}
+.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--text);outline:none;border-radius:8px}
+.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.muted{color:var(--muted);font-size:13px}.neon{color:var(--cyan)}.pink{color:var(--pink)}.lime{color:var(--lime)}
+.big{font-size:28px;font-weight:700}.stat{font-size:11px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.list{display:grid;gap:6px}.listrow{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:8px}.listrow span:first-child{flex:1}
+
+/* ── GNOME Top Bar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:32px;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(8,10,16,.7);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+.top-left{display:flex;align-items:center;gap:10px}
+.activities{padding:2px 12px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.9);font-weight:500;transition:.12s;border:none;background:transparent}
+.activities:hover{background:rgba(255,255,255,.12)}
+.app-name{color:rgba(255,255,255,.6);font-size:12px}
+.top-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px}
+.topbar-clock{cursor:pointer;padding:2px 12px;border-radius:8px;color:rgba(255,255,255,.9);font-weight:500;transition:.12s;display:flex;align-items:center;gap:8px}
+.topbar-clock:hover{background:rgba(255,255,255,.12)}
+.top-right{display:flex;align-items:center;gap:4px}
+.tb-icon{width:28px;height:24px;border:none;background:transparent;border-radius:6px;color:rgba(255,255,255,.7);display:grid;place-items:center;cursor:pointer;font-size:13px;transition:.1s}
+.tb-icon:hover{background:rgba(255,255,255,.12);color:#fff}
+.tb-divider{width:1px;height:16px;background:rgba(255,255,255,.15);margin:0 4px}
+
+/* ── Ubuntu Dock (Left) ── */
+#dock{position:fixed;left:0;top:32px;bottom:0;width:72px;z-index:400;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;background:rgba(8,10,16,.65);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-right:1px solid rgba(255,255,255,.06)}
+.dock-btn{width:52px;height:52px;border-radius:12px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;transition:.15s;font-size:18px;font-weight:900;color:var(--cyan);position:relative}
+.dock-btn .ic{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--line);font-size:16px;font-weight:900;color:var(--cyan)}
+.dock-btn:hover{transform:scale(1.08)}.dock-btn:hover .ic{background:rgba(0,246,255,.15);border-color:var(--cyan)}
+.dock-btn.active .ic{background:rgba(0,246,255,.2);border-color:var(--cyan)}
+.dock-btn.running .ic::after{content:"";position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:6px;height:3px;border-radius:2px;background:var(--cyan)}
+#dockScroll{display:flex;flex-direction:column;gap:6px;overflow-y:auto;overflow-x:hidden;max-height:calc(100vh - 120px);scrollbar-width:none}#dockScroll::-webkit-scrollbar{display:none}
+.dock-sep{width:36px;height:1px;background:rgba(255,255,255,.08);margin:4px 0}
+
+/* ── Activities Overview ── */
+#activities{position:fixed;inset:32px 0 0 72px;z-index:600;display:none;flex-direction:column;background:rgba(5,8,18,.8);backdrop-filter:blur(60px) saturate(180%);-webkit-backdrop-filter:blur(60px) saturate(180%);padding:24px;overflow:auto}
+#activities.open{display:flex;animation:fadeIn .2s}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.activities-search{width:min(500px,80vw);margin:0 auto 20px;padding:12px 20px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--text);border-radius:24px;outline:none;text-align:center;font-size:15px}
+.activities-search:focus{border-color:var(--accent);background:rgba(255,255,255,.12)}
+.activities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;max-width:900px;margin:0 auto;width:100%}
+.activities-grid .appicon{height:96px;border-radius:12px}
+.activities-grid .appicon .ico{width:48px;height:48px;font-size:22px;border-radius:13px}
+
+/* ── System Menu (top-right dropdown) ── */
+#sysmenu{position:fixed;top:38px;right:8px;z-index:650;width:min(380px,90vw);max-height:80vh;overflow:auto;display:none;background:var(--glass-strong);border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 64px rgba(0,0,0,.5);padding:16px;border-radius:16px;backdrop-filter:blur(50px) saturate(180%);-webkit-backdrop-filter:blur(50px) saturate(180%)}
+#sysmenu.open{display:block;animation:fadeIn .15s}
+.sysm-section{margin-bottom:12px}
+.sysm-section h4{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.sysm-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:.1s;border:none;background:rgba(255,255,255,.04)}
+.sysm-row:hover{background:rgba(255,255,255,.1)}
+.sysm-row .si{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:16px}
+.sysm-row .st{flex:1}.sysm-row .st strong{display:block;font-size:13px}.sysm-row .st small{font-size:11px;color:var(--muted)}
+.sysm-slider{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.1);position:relative;margin:8px 0;cursor:pointer}.sysm-slider i{display:block;height:100%;border-radius:3px;background:var(--cyan)}
+.sysm-slider .knob{position:absolute;top:-5px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+
+/* ── Setup Overlay ── */
+#setupOverlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.5);display:none;place-items:center;padding:20px;backdrop-filter:blur(12px)}
+.setup{width:min(720px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(255,255,255,.1);background:var(--glass-strong);padding:32px;box-shadow:0 24px 64px rgba(0,0,0,.5);border-radius:16px;backdrop-filter:blur(50px) saturate(180%)}
+.steps{display:flex;gap:6px;margin-bottom:20px}.step{height:4px;flex:1;background:rgba(255,255,255,.1);border-radius:2px}.step.on{background:var(--accent)}.step.done{background:var(--lime)}
+.themegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.themebtn{min-height:72px;padding:10px;text-align:left;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.04)}.themebtn:hover{background:rgba(255,255,255,.08)}.themebtn strong{display:block}.themebtn small{color:var(--muted)}
+.appdash{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.appdash .card{min-height:120px}.business{border-left:3px solid var(--pink);padding-left:12px}
+.gamewrap{display:grid;place-items:center;min-height:100%}.game-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.badge{padding:4px 12px;border:1px solid var(--line);border-radius:20px;font-size:12px;background:rgba(255,255,255,.05)}
+.board{display:grid;gap:4px}.cell{display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);font-weight:900;cursor:pointer;transition:.1s}.cell:hover{background:rgba(255,255,255,.08)}.snake-cell{display:inline-block;width:24px;height:24px;border-radius:3px}
+
+/* ── Responsive ── */
+body.mobile #dock{width:56px}body.mobile #desktop{left:56px}body.mobile #icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px}.mobile .window{left:8px!important;top:44px!important;width:calc(100vw - 64px)!important;height:calc(100vh - 100px)!important;min-width:0}
+@media(max-width:650px){
+  #dock{width:56px}#desktop{left:56px}
+  #icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px;gap:6px}.appicon{height:72px}.appicon .ico{font-size:20px;width:38px;height:38px}
+  .window{left:8px!important;top:42px!important;width:calc(100vw - 64px)!important;height:calc(100vh - 96px)!important}
+  .content{padding:12px}.activities-grid{grid-template-columns:repeat(3,1fr)}
+  .app-name{display:none}.tb-icon{width:24px}
+}
 </style>
 </head>
 <body>
-<div id="boot"><div class="bootbox"><div class="big">CYBEROS // V2</div><div class="muted">INITIALISING NEURAL DESKTOP...</div><div class="bar"><i></i></div><div id="bootlog" style="margin-top:12px;font-size:12px"></div></div></div>
+<div id="boot"><div class="bootbox"><div class="boot-logo">CYBEROS v3.0 // LINUX EDITION</div><div class="muted" style="color:rgba(255,255,255,.4)">Initialising system services...</div><div class="bootbar"><i></i></div><div id="bootlog"></div></div></div>
 
-<div id="desktop"><div class="wall"><div class="orb o1"></div><div class="orb o2"></div></div>
-<div id="top"><div class="brand">CYBEROS <span class="pink">V2</span></div><div class="status"><div class="chip" id="modeChip">PERSONAL</div><div class="chip hide-mobile" id="netChip">SYSTEM ONLINE</div></div></div>
-<div id="icons"></div>
+<!-- GNOME Top Bar -->
+<div id="topbar">
+  <div class="top-left"><button class="activities" id="activitiesBtn">Activities</button><span class="app-name" id="appName">Desktop</span></div>
+  <div class="top-center"><div class="topbar-clock" id="topbarClock"></div></div>
+  <div class="top-right">
+    <span class="tb-icon" id="tbNet" title="Network">🌐</span>
+    <span class="tb-icon" id="tbVol" title="Volume">🔊</span>
+    <span class="tb-icon" id="tbBat" title="Power">⚡</span>
+    <span class="tb-divider"></span>
+    <span class="tb-icon" id="tbSys" title="System Menu">⚙</span>
+  </div>
 </div>
 
-<div id="taskbar"><button id="start">C</button><div class="tasks" id="tasks"></div><div class="clock" id="clock"></div></div>
-<div id="startmenu"><input class="search" id="appSearch" placeholder="Search apps and websites..."><div class="menuapps" id="menuapps"></div></div>
+<!-- Ubuntu Dock -->
+<div id="dock">
+  <div id="dockScroll"></div>
+</div>
 
-<div id="setupOverlay"><div class="setup">
-<div class="steps"><i class="step on"></i><i class="step"></i><i class="step"></i></div>
-<div id="setupBody"></div>
-</div></div>
+<!-- System Menu -->
+<div id="sysmenu">
+  <div class="sysm-section">
+    <h4>System</h4>
+    <div class="sysm-row" onclick="openSettings()"><span class="si">⚙</span><span class="st"><strong>Settings</strong><small>Configure your system</small></span></div>
+    <div class="sysm-row" onclick="openBusiness()"><span class="si">💼</span><span class="st"><strong>Business Hub</strong><small>Contacts, tasks, analytics</small></span></div>
+    <div class="sysm-row" onclick="openPages()"><span class="si">📄</span><span class="st"><strong>HTML Pages</strong><small>Web page builder</small></span></div>
+    <div class="sysm-row" onclick="toggleMobile()"><span class="si">📱</span><span class="st"><strong>Mobile Mode</strong><small>Toggle compact layout</small></span></div>
+  </div>
+  <div class="sysm-section">
+    <h4>Volume</h4>
+    <div class="sysm-slider"><i style="width:65%"></i><span class="knob" style="left:65%"></span></div>
+  </div>
+  <div class="sysm-section">
+    <h4>Account</h4>
+    <div class="sysm-row" style="cursor:default"><span class="si">👤</span><span class="st"><strong id="sysmUser">Operator</strong><small id="sysmMode">Personal Mode</small></span></div>
+    <div class="sysm-row" onclick="openSetup(true)"><span class="si">🔄</span><span class="st"><strong>Run Setup</strong><small>Reconfigure system</small></span></div>
+    <div class="sysm-row" onclick="if(confirm('Restart CyberOS?'))location.reload()"><span class="si">⏻</span><span class="st"><strong>Restart</strong><small>Reboot the system</small></span></div>
+  </div>
+</div>
 
-<script>
-const STORE='cyberos-v2-state';
-const defaults={setup:true,setupVersion:2,business:false,name:'Operator',company:'CYBER NETWORK',accent:'#00f6ff',bg:'cyber',apps:[
-{id:'browser',name:'Browser',type:'app',icon:'WEB',url:'https://search.rohansweb.co.uk/'},
-{id:'files',name:'Files',type:'app',icon:'FS'},
-{id:'terminal',name:'Terminal',type:'app',icon:'>_'},
-{id:'settings',name:'Settings',type:'app',icon:'CFG'},
-{id:'business',name:'Business Hub',type:'app',icon:'BIZ'},
-{id:'calculator',name:'Calculator',type:'app',icon:'CALC'},
-{id:'notes',name:'Notes',type:'app',icon:'NOTE'},
-{id:'dashboard',name:'System Dashboard',type:'app',icon:'SYS'},
-{id:'pages',name:'HTML Pages',type:'app',icon:'<>',pages:[{name:'Home',html:'<h1>CyberOS Page</h1><p>Edit this page in the HTML Pages app.</p>'}]}
-],websites:[]};
-let state;try{state=JSON.parse(localStorage.getItem(STORE)||'null')||structuredClone(defaults)}catch(e){state=structuredClone(defaults);localStorage.removeItem(STORE)}state=Object.assign(structuredClone(defaults),state);state.apps=Array.isArray(state.apps)?state.apps:structuredClone(defaults.apps);state.websites=Array.isArray(state.websites)?state.websites:[];state.serverUrl='https://cyberos-a5ps.onrender.com';
-const themes={cyber:{name:'Cyber Neon',cyan:'#00f6ff',pink:'#ff2bd6',lime:'#a6ff00',bg:'#02040a'},matrix:{name:'Matrix',cyan:'#00ff66',pink:'#00cc44',lime:'#b6ff00',bg:'#020b06'},violet:{name:'Violet Pulse',cyan:'#b36bff',pink:'#ff4fd8',lime:'#f0a6ff',bg:'#08020f'},sunset:{name:'Neon Sunset',cyan:'#ffb000',pink:'#ff3b7a',lime:'#ffe600',bg:'#0d0402'},ice:{name:'Ice Grid',cyan:'#75e6ff',pink:'#8fb8ff',lime:'#d9ffff',bg:'#020912'}};
+<!-- Activities Overview -->
+<div id="activities">
+  <input class="activities-search" id="appSearch" placeholder="Type to search applications...">
+  <div class="activities-grid" id="activitiesGrid"></div>
+</div>
 
-let z=100, windows=new Map(), drag=null, setupStep=0;
-const $=id=>document.getElementById(id);
-function save(){localStorage.setItem(STORE,JSON.stringify(state))}
-function applyTheme(name){const t=themes[name]||themes.cyber;state.theme=name;state.accent=t.cyan;document.documentElement.style.setProperty('--cyan',t.cyan);document.documentElement.style.setProperty('--pink',t.pink);document.documentElement.style.setProperty('--lime',t.lime);document.documentElement.style.setProperty('--theme-bg',t.bg);save()}
-function themeCard(k){const t=themes[k];return '<button class="themebtn" onclick="applyTheme(\''+k+'\');openSettings()"><strong>'+t.name+'</strong><small>'+t.cyan+' / '+t.pink+'</small></button>'}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function clock(){let d=new Date();$('clock').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'  '+d.toLocaleDateString([], {day:'2-digit',month:'short'})}
-setInterval(clock,1000);clock();
-function appById(id){return state.apps.find(a=>a.id===id)||state.websites.find(a=>a.id===id)}
-if(!state.apps.some(a=>a.id==='pages'))state.apps.push(defaults.apps.find(a=>a.id==='pages')||{id:'pages',name:'HTML Pages',type:'app',icon:'<>',pages:[{name:'Home',html:'<h1>CyberOS Page</h1>'}]});
-function renderIcons(){
- const all=[...state.apps,...state.websites];
- $('icons').innerHTML=all.slice(0,12).map(a=>'<button class="appicon" data-open="'+esc(a.id)+'"><span class="ico">'+esc(a.icon||'APP')+'</span><span>'+esc(a.name)+'</span></button>').join('');
- $('menuapps').innerHTML=all.map(a=>'<button class="appicon" data-open="'+esc(a.id)+'"><span class="ico">'+esc(a.icon||'APP')+'</span><span>'+esc(a.name)+'</span></button>').join('');
- document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openApp(b.dataset.open));
-}
-function focusWin(w){z++;w.style.zIndex=z;document.querySelectorAll('.window').forEach(x=>x.classList.remove('active'));w.classList.add('active')}
-function closeWin(id){let w=windows.get(id);if(!w)return;w.remove();windows.delete(id);renderTasks()}
-function minimizeWin(id){let w=windows.get(id);if(w)w.style.display='none'}
-function restoreWin(id){let w=windows.get(id);if(w){w.style.display='flex';focusWin(w)}}
-function renderTasks(){
- $('tasks').innerHTML=[...windows].map(([id,w])=>'<button class="task" data-task="'+esc(id)+'">'+esc(w.dataset.title||id)+'</button>').join('');
- document.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{let w=windows.get(b.dataset.task);if(w?.style.display==='none')restoreWin(b.dataset.task);else focusWin(w)});
-}
-function makeWindow(id,title,body){
- if(windows.has(id)){restoreWin(id);return windows.get(id)}
- const w=document.createElement('section');w.className='window open active';w.dataset.title=title;w.id='win-'+id;
- const x=40+(windows.size%5)*28,y=75+(windows.size%4)*26;
- w.style.left=Math.min(x,Math.max(8,innerWidth-300))+'px';w.style.top=Math.min(y,Math.max(58,innerHeight-260))+'px';
- w.innerHTML='<div class="titlebar"><span class="title">'+esc(title)+'</span><button class="winbtn" data-min>_</button><button class="winbtn close" data-close>X</button></div><div class="content">'+body+'</div>';
- $('desktop').appendChild(w);windows.set(id,w);focusWin(w);renderTasks();
- w.querySelector('[data-close]').onclick=()=>closeWin(id);w.querySelector('[data-min]').onclick=()=>minimizeWin(id);
- w.addEventListener('pointerdown',()=>focusWin(w));
- const bar=w.querySelector('.titlebar');bar.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;focusWin(w);const r=w.getBoundingClientRect();drag={w,dx:e.clientX-r.left,dy:e.clientY-r.top};bar.setPointerCapture(e.pointerId)});
- bar.addEventListener('pointermove',e=>{if(!drag||drag.w!==w)return;let nx=e.clientX-drag.dx,ny=e.clientY-drag.dy;nx=Math.max(0,Math.min(innerWidth-w.offsetWidth,nx));ny=Math.max(54,Math.min(innerHeight-80,ny));w.style.left=nx+'px';w.style.top=ny+'px'});
- bar.addEventListener('pointerup',()=>drag=null);bar.addEventListener('pointercancel',()=>drag=null);
- return w
-}
-function openApp(id){
- $('startmenu').style.display='none';let a=appById(id);if(!a)return;
- if(a.type==='website'){return makeWindow(id,a.name,'<div style="height:100%;min-height:0;overflow:hidden"><iframe title="'+esc(a.name)+'" src="'+esc(a.url)+'" style="display:block;width:100%;height:100%;min-height:0;border:0;background:white;overflow:hidden"></iframe></div>')}
- if(id==='settings')return openSettings();
- if(id==='business')return openBusiness();
- if(id==='files')return makeWindow(id,'File Matrix','<div class="card"><div class="big neon">FILE MATRIX</div><p class="muted">Browser storage is available to this CyberOS workspace.</p><button class="cyberbtn" onclick="downloadState()">EXPORT OS CONFIG</button></div>');
- if(id==='pages')return openPages();
- if(id==='calculator')return makeWindow(id,'Calculator','<div class="card"><div class="big neon" id="calcDisplay">0</div><div class="appdash">'+['7','8','9','/','4','5','6','*','1','2','3','-','0','.','=','+','C'].map(x=>'<button class="cyberbtn" onclick="calcKey(\''+x+'\')">'+x+'</button>').join('')+'</div></div>');
- if(id==='notes')return makeWindow(id,'Notes','<div class="field"><input id="noteTitle" placeholder="Note title"></div><textarea id="notesArea" style="width:100%;height:65%;background:#020711;color:var(--text);border:1px solid var(--line);padding:14px;resize:none" placeholder="Write a note..."></textarea><button class="cyberbtn" onclick="saveNote()">SAVE NOTE</button>');
- if(id==='dashboard')return makeWindow(id,'System Dashboard','<div class="appdash"><div class="card"><div class="big neon">'+navigator.hardwareConcurrency+'</div><div class="stat">CPU THREADS</div></div><div class="card"><div class="big neon">'+innerWidth+'×'+innerHeight+'</div><div class="stat">DISPLAY</div></div><div class="card"><div class="big neon">'+[...state.apps,...state.websites].length+'</div><div class="stat">INSTALLED APPS</div></div><div class="card"><div class="big neon">'+(state.business?'BUSINESS':'PERSONAL')+'</div><div class="stat">WORKSPACE</div></div></div>');
- if(id==='terminal')return makeWindow(id,'Terminal','<div id="termout" style="font-family:ui-monospace,monospace;line-height:1.7;color:#a6ff00">CYBEROS TERMINAL v2<br>Type commands below.</div><div style="display:flex;margin-top:12px"><input id="term" style="flex:1;background:#020711;color:#a6ff00;border:1px solid var(--line);padding:12px" autocomplete="off"><button class="cyberbtn" onclick="runTerm()">RUN</button></div>');
- if(id==='browser')return makeWindow(id,'Browser','<div class="field"><input id="urlbox" value="https://search.rohansweb.co.uk/"><button class="cyberbtn" onclick="navBrowser()">SEARCH / CONNECT</button></div><div style="height:calc(100% - 82px);min-height:0;overflow:hidden;border:1px solid var(--line)"><iframe id="browserframe" src="https://search.rohansweb.co.uk/" style="display:block;width:100%;height:100%;border:0;background:white;overflow:hidden"></iframe></div>');
- return makeWindow(id,a.name,'<div class="card"><div class="big neon">'+esc(a.name)+'</div><p class="muted">CyberOS application module.</p></div>');
-}
-function openPages(){
- const a=appById('pages'); if(!a.pages)a.pages=[];
- let options=a.pages.map((p,i)=>'<option value="'+i+'">'+esc(p.name)+'</option>').join('');
- return makeWindow('pages','HTML Pages','<div class="grid"><div class="card"><div class="big neon">HTML PAGE SYSTEM</div><p class="muted">Create multiple local HTML pages for your CyberOS workspace.</p><button class="cyberbtn" onclick="newPage()">NEW PAGE</button></div><div class="card"><label>PAGE</label><select id="pageSelect" onchange="loadPage()">'+options+'</select><button class="cyberbtn" onclick="savePage()">SAVE PAGE</button><button class="cyberbtn" onclick="previewPage()">PREVIEW</button></div></div><div class="field"><label>Page name</label><input id="pageName"></div><div class="field"><label>HTML</label><textarea id="pageHtml" style="width:100%;height:280px;resize:vertical;background:#020711;color:#a6ff00;border:1px solid var(--line);padding:12px;font-family:ui-monospace,monospace"></textarea></div>');
-}
-function loadPage(){let a=appById('pages'),i=Number($('pageSelect').value),p=a.pages[i];if(!p)return;$('pageName').value=p.name;$('pageHtml').value=p.html}
-function savePage(){let a=appById('pages'),i=Number($('pageSelect').value);if(!a.pages[i])return;a.pages[i].name=$('pageName').value||'Page';a.pages[i].html=$('pageHtml').value;save();openPages()}
-function newPage(){let a=appById('pages');a.pages.push({name:'New Page',html:'<h1>New Cyber Page</h1><p>Start writing HTML here.</p>'});save();openPages()}
-function previewPage(){let html=$('pageHtml').value;let id='preview-'+Date.now();makeWindow(id,$('pageName').value||'Page Preview','<div style="height:100%;overflow:auto;background:white;color:#111;padding:20px">'+html+'</div>')}
-function openSettings(){makeWindow('settings','Settings','<div class="card"><div class="big neon">THEME CORE</div><p class="muted">Choose a complete CyberOS neon theme.</p><div class="themegrid">'+Object.keys(themes).map(themeCard).join('')+'</div></div><div class="grid"><button class="cyberbtn" onclick="openSetup(true)">RUN SETUP</button><button class="cyberbtn" onclick="openBusiness()">BUSINESS MODE</button><button class="cyberbtn" onclick="toggleMobile()">MOBILE MODE</button></div><div class="card"><h3>Browser account</h3><p class="muted">Sign in or join the CyberOS Business Server from the web browser.</p><button class="cyberbtn" onclick="openBrowserAccount()">SIGN IN / JOIN</button><div class="field"><label>Business server URL</label><input id="serverUrl" value="'+esc(state.serverUrl)+'" placeholder="https://your-cyberos-server.onrender.com"></div><button class="cyberbtn" onclick="saveServerUrl()">SAVE SERVER</button></div>')}
-function openBusiness(){makeWindow('business','Business Hub','<div class="business"><div class="big">BUSINESS CONTROL</div><p class="muted">Customise apps, websites, branding and workspace tools.</p></div><div class="grid"><button class="cyberbtn" onclick="openSetup(true)">CUSTOMISE</button><button class="cyberbtn" onclick="addWebsite()">ADD WEBSITE</button><button class="cyberbtn" onclick="addApp()">ADD APP</button><button class="cyberbtn" onclick="toggleBusiness()">TOGGLE BUSINESS MODE</button></div><div class="card"><h3>Installed</h3><div class="list">'+[...state.apps,...state.websites].map(a=>'<div class="listrow"><span>'+esc(a.name)+'</span><small class="muted">'+esc(a.type)+'</small><button onclick="removeItem(\''+esc(a.id)+'\')">REMOVE</button></div>').join('')+'</div></div>')}
-function addWebsite(){let name=prompt('Website name');if(!name)return;let url=prompt('Website URL','https://');if(!url)return;let id='web-'+Date.now();state.websites.push({id,name,type:'website',icon:'WWW',url});save();renderIcons();openBusiness()}
-function addApp(){let name=prompt('App name');if(!name)return;let id='app-'+Date.now();state.apps.push({id,name,type:'app',icon:'APP'});save();renderIcons();openBusiness()}
-function removeItem(id){if(['browser','files','terminal','settings','business'].includes(id)){alert('Core apps cannot be removed.');return}state.apps=state.apps.filter(a=>a.id!==id);state.websites=state.websites.filter(a=>a.id!==id);save();renderIcons();openBusiness()}
-function toggleBusiness(){state.business=!state.business;save();updateMode();openBusiness()}
-function updateMode(){$('modeChip').textContent=state.business?'BUSINESS':'PERSONAL';document.body.classList.toggle('business-mode',state.business)}
-function toggleMobile(){document.body.classList.toggle('mobile');}
-function applyAccent(){state.accent=$('accent').value;document.documentElement.style.setProperty('--cyan',state.accent);save()}
-function calcKey(k){const d=$('calcDisplay');if(k==='C')d.textContent='0';else if(k==='='){try{d.textContent=String(Function('return '+d.textContent)())}catch{d.textContent='ERR'}}else d.textContent=d.textContent==='0'?k:d.textContent+k}
-function saveNote(){localStorage.setItem('cyberos-note',JSON.stringify({title:$('noteTitle').value,text:$('notesArea').value}));alert('Note saved locally.')}
-function saveServerUrl(){state.serverUrl=$('serverUrl').value.trim().replace(/\/$/,'')||location.origin;save();alert('Business server saved.')}
-function openBrowserAccount(){openApp('browser');setTimeout(()=>{const f=$('browserframe');if(f)f.srcdoc=accountPage()},60)}
-function accountPage(){return '<style>body{font-family:system-ui;background:#050812;color:#eaffff;padding:28px}input,button{display:block;width:100%;max-width:420px;padding:12px;margin:8px 0;background:#07152a;color:white;border:1px solid #00f6ff;border-radius:5px}h1{color:#00f6ff}.msg{padding:10px;border:1px solid #ff2bd6}</style><h1>CyberOS Business Server</h1><p>Sign in or join your business workspace.</p><input id="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><input id="name" placeholder="Name (for joining)"><button onclick="send(\'/api/login\',false)">SIGN IN</button><button onclick="send(\'/api/register\',true)">JOIN BUSINESS</button><div id="msg" class="msg"></div><script>async function send(path,join){const body={email:email.value,password:password.value};if(join)body.name=name.value;try{const r=await fetch(JSON.stringify(state.serverUrl)+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();msg.textContent=j.message||j.error||'Done'}catch(e){msg.textContent='Server unavailable — deploy the CyberOS Render server and reload.'}}<\/script>'}
+<!-- Desktop -->
+<div id="desktop"><div class="wall"><div class="orb o1"></div><div class="orb o2"></div></div><div id="icons"></div></div>
 
-function navBrowser(){let u=$('urlbox').value.trim();if(!/^https?:\/\//i.test(u))u='https://'+u;$('browserframe').src=u}
-function runTerm(){let input=$('term'),out=$('termout'),cmd=input.value.trim();if(!cmd)return;let r=cmd==='help'?'help · apps · mode · clear · setup · business':cmd==='apps'?[...state.apps,...state.websites].map(a=>a.name).join(' | '):cmd==='mode'?(state.business?'BUSINESS':'PERSONAL'):cmd==='setup'?'Launching setup...':cmd==='business'?'Business mode available from settings.':cmd==='clear'?'': 'Command not found: '+cmd;out.innerHTML+=(out.innerHTML.endsWith('<br>')?'':'<br>')+'&gt; '+esc(cmd)+'<br>'+esc(r);input.value=''}
-function downloadState(){let b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='cyberos-config.json';a.click()}
-function openSetup(force=false){if(!force&&!state.setup)return;setupStep=0;$('setupOverlay').style.display='grid';renderSetup()}
-function renderSetup(){
- const b=$('setupBody');
- if(setupStep===0)b.innerHTML='<div class="big neon">WELCOME TO CYBEROS V2</div><p class="muted">Configure your workspace. Everything is stored locally in this browser.</p><div class="field"><label>Operator name</label><input id="sname" value="'+esc(state.name)+'"></div><button class="cyberbtn" onclick="setupNext()">NEXT</button>';
- if(setupStep===1)b.innerHTML='<div class="big neon">WORKSPACE MODE</div><p class="muted">Business mode adds a control hub for custom apps, websites and branding.</p><div class="grid"><button class="cyberbtn" onclick="state.business=false;setupNext()">PERSONAL</button><button class="cyberbtn" onclick="state.business=true;setupNext()">BUSINESS</button></div>';
- if(setupStep===2)b.innerHTML='<div class="big neon">BUSINESS CUSTOMISATION</div><div class="field"><label>Company / workspace</label><input id="scompany" value="'+esc(state.company)+'"></div><div class="field"><label>Accent</label><input id="saccent" type="color" value="'+esc(state.accent)+'"></div><button class="cyberbtn" onclick="finishSetup()">FINISH & ENTER CYBEROS</button>';
- document.querySelectorAll('.step').forEach((x,i)=>x.classList.toggle('on',i<=setupStep))
-}
-function setupNext(){if(setupStep===0){state.name=$('sname').value||'Operator';setupStep=1}else if(setupStep===1){setupStep=2}renderSetup()}
-function finishSetup(){state.company=$('scompany').value||state.company;state.accent=$('saccent').value;state.setup=false;save();document.documentElement.style.setProperty('--cyan',state.accent);$('setupOverlay').style.display='none';updateMode();renderIcons()}
-$('start').onclick=()=>{$('startmenu').style.display=$('startmenu').style.display==='block'?'none':'block'};
-$('appSearch').oninput=e=>document.querySelectorAll('#menuapps [data-open]').forEach(b=>b.parentElement.style.display=b.innerText.toLowerCase().includes(e.target.value.toLowerCase())?'':'none');
-document.addEventListener('keydown',e=>{if(e.key==='Escape')$('startmenu').style.display='none';if(e.key==='F1'){e.preventDefault();openSetup(true)}});
-try{$('boot').style.display='none';applyTheme(state.theme||'cyber');renderIcons();updateMode();if((state.setup!==false || state.setupVersion!==2) && !location.pathname.endsWith('/setup.html')){location.href='setup.html';}}catch(e){console.error('CyberOS startup failed',e);$('boot').style.display='none';}
-window.addEventListener('resize',()=>{if(innerWidth<650)document.body.classList.add('mobile')});
-if(innerWidth<650)document.body.classList.add('mobile');
-</script>
+<!-- Setup Overlay -->
+<div id="setupOverlay"><div class="setup"><div class="steps" id="setupSteps"></div><div id="setupBody"></div></div></div>
+
+<script src="js/apps.js"></script>
+<script src="js/os.js"></script>
 </body>
 </html>
