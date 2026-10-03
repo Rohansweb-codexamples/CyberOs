@@ -1,173 +1,130 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>CyberOS</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CyberOS v2</title>
+<meta name="theme-color" content="#050812">
 <style>
-:root{
-  --bg:#04060b;--panel:rgba(8,14,22,.82);--line:#23f7ff;--accent:#ff7a00;--text:#e7fbff;--muted:#7ea2aa;
-}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Consolas,monospace;background:#03050a;color:var(--text)}
-body{background:
-radial-gradient(circle at 20% 20%,rgba(35,247,255,.12),transparent 30%),
-radial-gradient(circle at 80% 80%,rgba(255,122,0,.12),transparent 30%),
-linear-gradient(135deg,#02050a,#07101a 48%,#020408)}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.018) 4px);mix-blend-mode:screen}
-#desktop{position:absolute;inset:0 0 52px 0;padding:24px;overflow:hidden}
-.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(35,247,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(35,247,255,.035) 1px,transparent 1px);background-size:40px 40px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent)}
-.brand{position:absolute;left:26px;top:20px;font-size:28px;font-weight:800;letter-spacing:4px;color:var(--line);text-shadow:0 0 18px rgba(35,247,255,.55)}
-.status{position:absolute;right:24px;top:20px;font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
-.icons{position:relative;z-index:2;display:grid;grid-template-columns:repeat(2,90px);gap:18px;width:max-content;margin-top:64px}
-.icon{width:86px;height:84px;border:1px solid rgba(35,247,255,.18);background:rgba(5,12,18,.52);backdrop-filter:blur(8px);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;cursor:pointer;transition:.18s}
-.icon:hover{transform:translateY(-3px);border-color:var(--line);box-shadow:0 0 22px rgba(35,247,255,.18)}
-.icon .glyph{font-size:30px;line-height:1}.icon span{font-size:11px}
-.window{position:absolute;width:min(760px,80vw);height:min(470px,70vh);left:50%;top:50%;transform:translate(-50%,-50%);background:var(--panel);border:1px solid rgba(35,247,255,.45);box-shadow:0 0 35px rgba(35,247,255,.15),0 20px 70px rgba(0,0,0,.55);backdrop-filter:blur(18px);border-radius:16px;overflow:hidden;display:none;z-index:10}
-.window.active{display:block}.titlebar{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;border-bottom:1px solid rgba(35,247,255,.22);background:rgba(3,10,15,.9);cursor:move}
-.title{font-size:12px;letter-spacing:1.6px;color:var(--line)}
-.controls button{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:var(--text);cursor:pointer}.controls button:hover{background:rgba(255,255,255,.08)}
-.content{height:calc(100% - 42px);padding:16px;overflow:auto}
-.card{border:1px solid rgba(35,247,255,.18);background:rgba(1,7,12,.5);border-radius:12px;padding:14px;margin-bottom:12px}
-.card h3{margin:0 0 8px;color:var(--line);font-size:14px}.card p{margin:0;color:#b8cbd0;font-size:12px;line-height:1.6}
-.terminal{height:100%;display:flex;flex-direction:column;background:#010305;color:#77ff9a}
-.termout{flex:1;overflow:auto;padding:14px;white-space:pre-wrap;font-size:13px;line-height:1.5}.termin{display:flex;border-top:1px solid #163821}.termin span{padding:10px;color:#23f7ff}.termin input{flex:1;background:#000;border:0;outline:0;color:#77ff9a;font-family:inherit;padding:10px}
-.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}.file{padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.03);cursor:pointer}.file:hover{border-color:var(--line)}
-.searchbox{display:flex;gap:8px}.searchbox input{flex:1;background:#03080e;border:1px solid rgba(35,247,255,.25);color:white;border-radius:10px;padding:12px;outline:none}.btn{border:1px solid rgba(35,247,255,.4);background:rgba(35,247,255,.09);color:var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}.btn:hover{background:rgba(35,247,255,.16)}
-.setting{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)}input[type=range]{accent-color:#23f7ff}
-#taskbar{position:fixed;bottom:0;left:0;right:0;height:52px;background:rgba(2,7,12,.88);backdrop-filter:blur(18px);border-top:1px solid rgba(35,247,255,.25);display:flex;align-items:center;gap:8px;padding:0 10px;z-index:99}
-#start{width:38px;height:38px;border:1px solid rgba(35,247,255,.35);border-radius:10px;background:rgba(35,247,255,.08);color:var(--line);font-weight:bold;cursor:pointer}.task{height:36px;min-width:36px;padding:0 12px;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(255,255,255,.03);color:white;cursor:pointer}.spacer{flex:1}.clock{text-align:right;font-size:11px;color:#c9eef2}
-#menu{position:fixed;left:10px;bottom:60px;width:300px;background:rgba(4,11,18,.96);border:1px solid rgba(35,247,255,.35);border-radius:16px;padding:14px;z-index:100;display:none;box-shadow:0 0 30px rgba(35,247,255,.12)}
-#menu.show{display:block}.menuhead{font-size:20px;color:var(--line);margin-bottom:12px}.menuitem{padding:11px;border-radius:9px;cursor:pointer}.menuitem:hover{background:rgba(35,247,255,.08)}
-.boot{position:fixed;inset:0;background:#010308;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:.6s}
-.boot.hide{opacity:0;pointer-events:none}.bootlogo{font-size:44px;letter-spacing:8px;color:var(--line);text-shadow:0 0 25px rgba(35,247,255,.7)}.bootbar{width:280px;height:4px;background:#0a151c;margin-top:25px;overflow:hidden}.bootbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--line),var(--accent));animation:load 1.8s forwards}@keyframes load{to{width:100%}}
-@media(max-width:700px){.window{width:94vw;height:72vh}.status{display:none}.brand{font-size:20px}.icons{grid-template-columns:repeat(2,78px)}}
+:root{--cyan:#00f6ff;--pink:#ff2bd6;--lime:#a6ff00;--bg:#050812;--panel:rgba(7,14,30,.88);--line:rgba(0,246,255,.28);--text:#eaffff;--muted:#83a9b7}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02040a;color:var(--text);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif}
+body{background:radial-gradient(circle at 20% 10%,rgba(0,246,255,.13),transparent 30%),radial-gradient(circle at 80% 80%,rgba(255,43,214,.11),transparent 28%),#02040a}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(0,246,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,246,255,.08) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,#000,transparent)}
+button,input,select{font:inherit}button{color:var(--text);border:1px solid var(--line);background:rgba(5,13,28,.86);cursor:pointer}
+button:hover{border-color:var(--cyan);box-shadow:0 0 18px rgba(0,246,255,.18)}button:active{transform:translateY(1px)}
+#boot{position:fixed;inset:0;z-index:9999;background:#02040a;display:grid;place-items:center}.bootbox{width:min(650px,90vw);font-family:ui-monospace,monospace;color:var(--cyan)}.bar{height:8px;border:1px solid var(--cyan);margin-top:16px}.bar i{display:block;height:100%;width:0;background:var(--cyan);box-shadow:0 0 15px var(--cyan);animation:boot 1.5s forwards}@keyframes boot{to{width:100%}}
+#desktop{position:fixed;inset:0 0 54px 0}.wall{position:absolute;inset:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(2px);opacity:.45;animation:float 12s ease-in-out infinite}.o1{width:260px;height:260px;background:var(--cyan);left:5%;top:8%;box-shadow:0 0 100px var(--cyan)}.o2{width:300px;height:300px;background:var(--pink);right:2%;bottom:5%;box-shadow:0 0 110px var(--pink);animation-delay:-5s}@keyframes float{50%{transform:translate(60px,-30px) scale(1.12)}}
+#top{position:absolute;left:16px;right:16px;top:12px;height:50px;display:flex;align-items:center;justify-content:space-between;z-index:20}.brand{font-weight:900;letter-spacing:3px;color:var(--cyan);text-shadow:0 0 14px rgba(0,246,255,.55)}.status{display:flex;gap:8px;align-items:center}.chip{padding:8px 11px;border:1px solid var(--line);background:rgba(2,8,18,.7);font-size:12px}
+#icons{position:absolute;top:82px;left:18px;display:grid;grid-template-columns:repeat(2,88px);gap:12px;z-index:5}.appicon{height:82px;border-radius:12px;padding:8px;display:grid;place-items:center;text-align:center;font-size:11px;transition:.2s}.appicon .ico{font-size:25px;color:var(--cyan);font-weight:900}.appicon:hover{transform:translateY(-3px);background:rgba(0,246,255,.08)}
+.window{position:absolute;display:none;flex-direction:column;width:min(850px,calc(100vw - 34px));height:min(610px,calc(100vh - 110px));min-width:280px;min-height:180px;background:var(--panel);border:1px solid var(--cyan);box-shadow:0 0 35px rgba(0,246,255,.18),inset 0 0 35px rgba(0,246,255,.025);backdrop-filter:blur(14px);border-radius:8px;overflow:hidden;z-index:30}.window.open{display:flex;animation:open .16s ease-out}@keyframes open{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}.window.active{z-index:100}.titlebar{height:42px;flex:none;display:flex;align-items:center;gap:10px;padding:0 10px;background:linear-gradient(90deg,rgba(0,246,255,.12),rgba(255,43,214,.08));border-bottom:1px solid var(--line);cursor:grab}.titlebar:active{cursor:grabbing}.title{font-weight:800;letter-spacing:1px;flex:1}.winbtn{width:31px;height:27px;border-radius:4px}.close{border-color:rgba(255,60,100,.55)}.close:hover{border-color:#ff4f78;background:rgba(255,60,100,.14)}.content{flex:1;min-height:0;overflow:auto;padding:16px}.content::-webkit-scrollbar{width:7px}.content::-webkit-scrollbar-thumb{background:rgba(0,246,255,.3)}
+.card{border:1px solid var(--line);background:rgba(2,8,20,.62);padding:14px;border-radius:7px;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.cyberbtn{padding:11px 14px;border-radius:5px;text-transform:uppercase;letter-spacing:1px;font-weight:700}.field{display:grid;gap:6px;margin:10px 0}.field input,.field select{width:100%;padding:11px;border:1px solid var(--line);background:#030812;color:var(--text);outline:none;border-radius:4px}.field input:focus{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,246,255,.12)}.muted{color:var(--muted);font-size:13px}.neon{color:var(--cyan);text-shadow:0 0 12px rgba(0,246,255,.5)}.pink{color:var(--pink)}.big{font-size:28px;font-weight:900}.stat{font-size:12px;color:var(--muted);letter-spacing:1px}.list{display:grid;gap:8px}.listrow{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(0,246,255,.16);background:rgba(0,246,255,.025)}.listrow span:first-child{flex:1}
+#taskbar{position:fixed;z-index:500;left:0;right:0;bottom:0;height:54px;background:rgba(2,6,15,.94);border-top:1px solid var(--line);display:flex;align-items:center;gap:7px;padding:7px 10px;backdrop-filter:blur(14px)}#start{height:40px;width:48px;font-weight:900;color:var(--cyan);font-size:18px}.tasks{display:flex;gap:6px;overflow:auto;flex:1}.task{height:38px;min-width:120px;padding:0 12px}.clock{font-family:ui-monospace,monospace;color:var(--cyan);padding:0 8px}
+#startmenu{position:fixed;z-index:600;left:10px;bottom:62px;width:min(390px,calc(100vw - 20px));max-height:75vh;overflow:auto;display:none;background:rgba(3,8,20,.97);border:1px solid var(--cyan);box-shadow:0 0 35px rgba(0,246,255,.25);padding:14px}.search{padding:12px;width:100%;margin-bottom:12px;background:#020711;border:1px solid var(--line);color:var(--text)}.menuapps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+#setupOverlay{position:fixed;inset:0;z-index:900;background:rgba(1,3,8,.97);display:none;place-items:center;padding:20px}.setup{width:min(720px,96vw);max-height:92vh;overflow:auto;border:1px solid var(--cyan);background:linear-gradient(145deg,rgba(5,15,32,.98),rgba(20,4,26,.98));padding:26px;box-shadow:0 0 60px rgba(0,246,255,.2)}.steps{display:flex;gap:6px;margin-bottom:20px}.step{height:5px;flex:1;background:#14202a}.step.on{background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.business{border-left:3px solid var(--pink);padding-left:12px}
+body.mobile #icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px}.mobile #icons .appicon{height:65px}.mobile .window{left:8px!important;top:62px!important;width:calc(100vw - 16px)!important;height:calc(100vh - 126px)!important;min-width:0}.mobile .titlebar{height:46px}.mobile #top{left:8px;right:8px}.mobile .chip.hide-mobile{display:none}
+@media(max-width:650px){#icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px;gap:6px}.appicon{height:65px}.appicon .ico{font-size:20px}.brand{font-size:13px}.status .chip:nth-child(2){display:none}.window{left:8px!important;top:68px!important;width:calc(100vw - 16px)!important;height:calc(100vh - 130px)!important}.titlebar{height:44px}.content{padding:11px}}
 </style>
 </head>
 <body>
-<div class="boot" id="boot"><div class="bootlogo">CYBEROS</div><div style="margin-top:8px;color:#63828b;font-size:12px">SECURE WEB SYSTEM</div><div class="bootbar"><i></i></div></div>
-<div id="desktop">
-  <div class="grid"></div>
-  <div class="brand">CYBEROS <span style="color:var(--accent)">01</span></div>
-  <div class="status">NETWORK: ONLINE<br>CORE: STABLE<br>SECURITY: ACTIVE</div>
-  <div class="icons">
-    <div class="icon" onclick="openApp('terminal')"><div class="glyph">⌘</div><span>Terminal</span></div>
-    <div class="icon" onclick="openApp('files')"><div class="glyph">▣</div><span>Files</span></div>
-    <div class="icon" onclick="openApp('browser')"><div class="glyph">◎</div><span>Browser</span></div>
-    <div class="icon" onclick="openApp('system')"><div class="glyph">◫</div><span>System</span></div>
-    <div class="icon" onclick="openApp('settings')"><div class="glyph">⚙</div><span>Settings</span></div>
-  </div>
+<div id="boot"><div class="bootbox"><div class="big">CYBEROS // V2</div><div class="muted">INITIALISING NEURAL DESKTOP...</div><div class="bar"><i></i></div><div id="bootlog" style="margin-top:12px;font-size:12px"></div></div></div>
+
+<div id="desktop"><div class="wall"><div class="orb o1"></div><div class="orb o2"></div></div>
+<div id="top"><div class="brand">CYBEROS <span class="pink">V2</span></div><div class="status"><div class="chip" id="modeChip">PERSONAL</div><div class="chip hide-mobile" id="netChip">SYSTEM ONLINE</div></div></div>
+<div id="icons"></div>
 </div>
 
-<div class="window" id="terminal">
- <div class="titlebar"><div class="title">CYBER TERMINAL</div><div class="controls"><button onclick="closeApp('terminal')">×</button></div></div>
- <div class="content" style="padding:0"><div class="terminal"><div class="termout" id="termout">CyberOS Terminal v1.0
-Type "help" for commands.
-</div><div class="termin"><span>root@cyberos:~$</span><input id="terminput" autocomplete="off"></div></div></div>
-</div>
+<div id="taskbar"><button id="start">C</button><div class="tasks" id="tasks"></div><div class="clock" id="clock"></div></div>
+<div id="startmenu"><input class="search" id="appSearch" placeholder="Search apps and websites..."><div class="menuapps" id="menuapps"></div></div>
 
-<div class="window" id="files">
- <div class="titlebar"><div class="title">FILE MATRIX</div><div class="controls"><button onclick="closeApp('files')">×</button></div></div>
- <div class="content"><div class="files">
-  <div class="file">▣<br><br>Documents</div><div class="file">▣<br><br>Downloads</div><div class="file">▣<br><br>Media</div><div class="file">▣<br><br>Projects</div><div class="file">▤<br><br>readme.txt</div>
- </div></div>
-</div>
-
-<div class="window" id="browser">
- <div class="titlebar"><div class="title">CYBER BROWSER</div><div class="controls"><button onclick="closeApp('browser')">×</button></div></div>
- <div class="content">
-  <div class="searchbox"><input id="search" placeholder="Search the web or enter a URL"><button class="btn" onclick="goSearch()">GO</button></div>
-  <div class="card" style="margin-top:16px"><h3>CyberOS Browser</h3><p>Search launches in a new tab. Enter a full URL or search phrase.</p></div>
- </div>
-</div>
-
-<div class="window" id="system">
- <div class="titlebar"><div class="title">SYSTEM MONITOR</div><div class="controls"><button onclick="closeApp('system')">×</button></div></div>
- <div class="content">
-  <div class="card"><h3>CPU CORE</h3><p id="cpu">Usage 34% · 8 virtual cores</p></div>
-  <div class="card"><h3>MEMORY</h3><p id="ram">3.8 GB / 8 GB allocated</p></div>
-  <div class="card"><h3>NETWORK</h3><p>Encrypted tunnel active · latency 12ms</p></div>
-  <div class="card"><h3>SECURITY</h3><p>Firewall enabled · browser sandbox active</p></div>
- </div>
-</div>
-
-<div class="window" id="settings">
- <div class="titlebar"><div class="title">SYSTEM SETTINGS</div><div class="controls"><button onclick="closeApp('settings')">×</button></div></div>
- <div class="content">
-  <div class="setting"><span>Glow intensity</span><input type="range" min="0" max="100" value="55" oninput="document.body.style.filter='saturate('+(0.7+this.value/100)+')'"></div>
-  <div class="setting"><span>Orange accent</span><button class="btn" onclick="swapAccent()">SWAP</button></div>
-  <div class="setting"><span>Desktop effects</span><button class="btn" onclick="document.querySelector('.grid').style.display=document.querySelector('.grid').style.display==='none'?'block':'none'">TOGGLE</button></div>
-  <div class="setting"><span>Reset CyberOS</span><button class="btn" onclick="location.reload()">REBOOT</button></div>
- </div>
-</div>
-
-<div id="menu">
- <div class="menuhead">CYBEROS</div>
- <div class="menuitem" onclick="openApp('terminal');toggleMenu()">Terminal</div>
- <div class="menuitem" onclick="openApp('files');toggleMenu()">Files</div>
- <div class="menuitem" onclick="openApp('browser');toggleMenu()">Browser</div>
- <div class="menuitem" onclick="openApp('system');toggleMenu()">System Monitor</div>
- <div class="menuitem" onclick="openApp('settings');toggleMenu()">Settings</div>
- <div class="menuitem" onclick="location.reload()">Reboot</div>
-</div>
-
-<div id="taskbar">
- <button id="start" onclick="toggleMenu()">C</button>
- <button class="task" onclick="openApp('terminal')">Terminal</button>
- <button class="task" onclick="openApp('files')">Files</button>
- <button class="task" onclick="openApp('browser')">Browser</button>
- <div class="spacer"></div>
- <div class="clock" id="clock"></div>
-</div>
+<div id="setupOverlay"><div class="setup">
+<div class="steps"><i class="step on"></i><i class="step"></i><i class="step"></i></div>
+<div id="setupBody"></div>
+</div></div>
 
 <script>
-let topZ=10;
-setTimeout(()=>document.getElementById('boot').classList.add('hide'),2100);
+const STORE='cyberos-v2-state';
+const defaults={setup:true,business:false,name:'Operator',company:'CYBER NETWORK',accent:'#00f6ff',bg:'cyber',apps:[
+{id:'browser',name:'Browser',type:'app',icon:'WEB',url:'https://www.google.com'},
+{id:'files',name:'Files',type:'app',icon:'FS'},
+{id:'terminal',name:'Terminal',type:'app',icon:'>_'},
+{id:'settings',name:'Settings',type:'app',icon:'CFG'},
+{id:'business',name:'Business Hub',type:'app',icon:'BIZ'}
+],websites:[]};
+let state=JSON.parse(localStorage.getItem(STORE)||'null')||structuredClone(defaults);
+let z=100, windows=new Map(), drag=null, setupStep=0;
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(STORE,JSON.stringify(state))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function clock(){let d=new Date();$('clock').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'  '+d.toLocaleDateString([], {day:'2-digit',month:'short'})}
+setInterval(clock,1000);clock();
+function appById(id){return state.apps.find(a=>a.id===id)||state.websites.find(a=>a.id===id)}
+function renderIcons(){
+ const all=[...state.apps,...state.websites];
+ $('icons').innerHTML=all.slice(0,12).map(a=>'<button class="appicon" data-open="'+esc(a.id)+'"><span class="ico">'+esc(a.icon||'APP')+'</span><span>'+esc(a.name)+'</span></button>').join('');
+ $('menuapps').innerHTML=all.map(a=>'<button class="appicon" data-open="'+esc(a.id)+'"><span class="ico">'+esc(a.icon||'APP')+'</span><span>'+esc(a.name)+'</span></button>').join('');
+ document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openApp(b.dataset.open));
+}
+function focusWin(w){z++;w.style.zIndex=z;document.querySelectorAll('.window').forEach(x=>x.classList.remove('active'));w.classList.add('active')}
+function closeWin(id){let w=windows.get(id);if(!w)return;w.remove();windows.delete(id);renderTasks()}
+function minimizeWin(id){let w=windows.get(id);if(w)w.style.display='none'}
+function restoreWin(id){let w=windows.get(id);if(w){w.style.display='flex';focusWin(w)}}
+function renderTasks(){
+ $('tasks').innerHTML=[...windows].map(([id,w])=>'<button class="task" data-task="'+esc(id)+'">'+esc(w.dataset.title||id)+'</button>').join('');
+ document.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{let w=windows.get(b.dataset.task);if(w?.style.display==='none')restoreWin(b.dataset.task);else focusWin(w)});
+}
+function makeWindow(id,title,body){
+ if(windows.has(id)){restoreWin(id);return windows.get(id)}
+ const w=document.createElement('section');w.className='window open active';w.dataset.title=title;w.id='win-'+id;
+ const x=40+(windows.size%5)*28,y=75+(windows.size%4)*26;
+ w.style.left=Math.min(x,Math.max(8,innerWidth-300))+'px';w.style.top=Math.min(y,Math.max(58,innerHeight-260))+'px';
+ w.innerHTML='<div class="titlebar"><span class="title">'+esc(title)+'</span><button class="winbtn" data-min>_</button><button class="winbtn close" data-close>X</button></div><div class="content">'+body+'</div>';
+ $('desktop').appendChild(w);windows.set(id,w);focusWin(w);renderTasks();
+ w.querySelector('[data-close]').onclick=()=>closeWin(id);w.querySelector('[data-min]').onclick=()=>minimizeWin(id);
+ w.addEventListener('pointerdown',()=>focusWin(w));
+ const bar=w.querySelector('.titlebar');bar.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;focusWin(w);const r=w.getBoundingClientRect();drag={w,dx:e.clientX-r.left,dy:e.clientY-r.top};bar.setPointerCapture(e.pointerId)});
+ bar.addEventListener('pointermove',e=>{if(!drag||drag.w!==w)return;let nx=e.clientX-drag.dx,ny=e.clientY-drag.dy;nx=Math.max(0,Math.min(innerWidth-w.offsetWidth,nx));ny=Math.max(54,Math.min(innerHeight-80,ny));w.style.left=nx+'px';w.style.top=ny+'px'});
+ bar.addEventListener('pointerup',()=>drag=null);bar.addEventListener('pointercancel',()=>drag=null);
+ return w
+}
 function openApp(id){
-  const w=document.getElementById(id);w.classList.add('active');w.style.zIndex=++topZ;
+ $('startmenu').style.display='none';let a=appById(id);if(!a)return;
+ if(a.type==='website'){return makeWindow(id,a.name,'<iframe title="'+esc(a.name)+'" src="'+esc(a.url)+'" style="width:100%;height:100%;min-height:450px;border:0;background:white"></iframe>')}
+ if(id==='settings')return openSettings();
+ if(id==='business')return openBusiness();
+ if(id==='files')return makeWindow(id,'File Matrix','<div class="card"><div class="big neon">FILE MATRIX</div><p class="muted">Browser storage is available to this CyberOS workspace.</p><button class="cyberbtn" onclick="downloadState()">EXPORT OS CONFIG</button></div>');
+ if(id==='terminal')return makeWindow(id,'Terminal','<div id="termout" style="font-family:ui-monospace,monospace;line-height:1.7;color:#a6ff00">CYBEROS TERMINAL v2<br>Type commands below.</div><div style="display:flex;margin-top:12px"><input id="term" style="flex:1;background:#020711;color:#a6ff00;border:1px solid var(--line);padding:12px" autocomplete="off"><button class="cyberbtn" onclick="runTerm()">RUN</button></div>');
+ if(id==='browser')return makeWindow(id,'Browser','<div class="field"><input id="urlbox" value="https://www.google.com"><button class="cyberbtn" onclick="navBrowser()">CONNECT</button></div><iframe id="browserframe" src="https://www.google.com" style="width:100%;height:70%;min-height:300px;border:1px solid var(--line);background:white"></iframe>');
+ return makeWindow(id,a.name,'<div class="card"><div class="big neon">'+esc(a.name)+'</div><p class="muted">CyberOS application module.</p></div>');
 }
-function closeApp(id){document.getElementById(id).classList.remove('active')}
-function toggleMenu(){document.getElementById('menu').classList.toggle('show')}
-document.addEventListener('click',e=>{if(!e.target.closest('#menu')&&!e.target.closest('#start'))document.getElementById('menu').classList.remove('show')});
-function updateClock(){
- const d=new Date();document.getElementById('clock').innerHTML=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'<br>'+d.toLocaleDateString();
+function openSettings(){makeWindow('settings','Settings','<div class="grid"><button class="cyberbtn" onclick="openSetup(true)">RUN SETUP</button><button class="cyberbtn" onclick="openBusiness()">BUSINESS MODE</button><button class="cyberbtn" onclick="toggleMobile()">MOBILE MODE</button></div><div class="card"><h3>Interface</h3><div class="field"><label>Accent</label><input id="accent" type="color" value="'+esc(state.accent)+'"></div><button class="cyberbtn" onclick="applyAccent()">APPLY</button></div>')}
+function openBusiness(){makeWindow('business','Business Hub','<div class="business"><div class="big">BUSINESS CONTROL</div><p class="muted">Customise apps, websites, branding and workspace tools.</p></div><div class="grid"><button class="cyberbtn" onclick="openSetup(true)">CUSTOMISE</button><button class="cyberbtn" onclick="addWebsite()">ADD WEBSITE</button><button class="cyberbtn" onclick="addApp()">ADD APP</button><button class="cyberbtn" onclick="toggleBusiness()">TOGGLE BUSINESS MODE</button></div><div class="card"><h3>Installed</h3><div class="list">'+[...state.apps,...state.websites].map(a=>'<div class="listrow"><span>'+esc(a.name)+'</span><small class="muted">'+esc(a.type)+'</small><button onclick="removeItem(\''+esc(a.id)+'\')">REMOVE</button></div>').join('')+'</div></div>')}
+function addWebsite(){let name=prompt('Website name');if(!name)return;let url=prompt('Website URL','https://');if(!url)return;let id='web-'+Date.now();state.websites.push({id,name,type:'website',icon:'WWW',url});save();renderIcons();openBusiness()}
+function addApp(){let name=prompt('App name');if(!name)return;let id='app-'+Date.now();state.apps.push({id,name,type:'app',icon:'APP'});save();renderIcons();openBusiness()}
+function removeItem(id){if(['browser','files','terminal','settings','business'].includes(id)){alert('Core apps cannot be removed.');return}state.apps=state.apps.filter(a=>a.id!==id);state.websites=state.websites.filter(a=>a.id!==id);save();renderIcons();openBusiness()}
+function toggleBusiness(){state.business=!state.business;save();updateMode();openBusiness()}
+function updateMode(){$('modeChip').textContent=state.business?'BUSINESS':'PERSONAL';document.body.classList.toggle('business-mode',state.business)}
+function toggleMobile(){document.body.classList.toggle('mobile');}
+function applyAccent(){state.accent=$('accent').value;document.documentElement.style.setProperty('--cyan',state.accent);save()}
+function navBrowser(){let u=$('urlbox').value.trim();if(!/^https?:\/\//i.test(u))u='https://'+u;$('browserframe').src=u}
+function runTerm(){let input=$('term'),out=$('termout'),cmd=input.value.trim();if(!cmd)return;let r=cmd==='help'?'help · apps · mode · clear · setup · business':cmd==='apps'?[...state.apps,...state.websites].map(a=>a.name).join(' | '):cmd==='mode'?(state.business?'BUSINESS':'PERSONAL'):cmd==='setup'?'Launching setup...':cmd==='business'?'Business mode available from settings.':cmd==='clear'?'': 'Command not found: '+cmd;out.innerHTML+=(out.innerHTML.endsWith('<br>')?'':'<br>')+'&gt; '+esc(cmd)+'<br>'+esc(r);input.value=''}
+function downloadState(){let b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='cyberos-config.json';a.click()}
+function openSetup(force=false){if(!force&&!state.setup)return;setupStep=0;$('setupOverlay').style.display='grid';renderSetup()}
+function renderSetup(){
+ const b=$('setupBody');
+ if(setupStep===0)b.innerHTML='<div class="big neon">WELCOME TO CYBEROS V2</div><p class="muted">Configure your workspace. Everything is stored locally in this browser.</p><div class="field"><label>Operator name</label><input id="sname" value="'+esc(state.name)+'"></div><button class="cyberbtn" onclick="setupNext()">NEXT</button>';
+ if(setupStep===1)b.innerHTML='<div class="big neon">WORKSPACE MODE</div><p class="muted">Business mode adds a control hub for custom apps, websites and branding.</p><div class="grid"><button class="cyberbtn" onclick="state.business=false;setupNext()">PERSONAL</button><button class="cyberbtn" onclick="state.business=true;setupNext()">BUSINESS</button></div>';
+ if(setupStep===2)b.innerHTML='<div class="big neon">BUSINESS CUSTOMISATION</div><div class="field"><label>Company / workspace</label><input id="scompany" value="'+esc(state.company)+'"></div><div class="field"><label>Accent</label><input id="saccent" type="color" value="'+esc(state.accent)+'"></div><button class="cyberbtn" onclick="finishSetup()">FINISH & ENTER CYBEROS</button>';
+ document.querySelectorAll('.step').forEach((x,i)=>x.classList.toggle('on',i<=setupStep))
 }
-setInterval(updateClock,1000);updateClock();
-function goSearch(){
- const q=document.getElementById('search').value.trim();if(!q)return;
- const url=/^https?:\/\//i.test(q)?q:'https://www.google.com/search?q='+encodeURIComponent(q);window.open(url,'_blank');
-}
-document.getElementById('search').addEventListener('keydown',e=>{if(e.key==='Enter')goSearch()});
-const input=document.getElementById('terminput'),out=document.getElementById('termout');
-input.addEventListener('keydown',e=>{
- if(e.key!=='Enter')return;
- const cmd=input.value.trim();out.textContent+='\nroot@cyberos:~$ '+cmd+'\n';
- const [c,...a]=cmd.split(' ');
- const responses={
-  help:'Commands: help, clear, date, whoami, status, echo, open, reboot',
-  date:new Date().toString(),whoami:'root',status:'SYSTEM ONLINE\nNETWORK SECURE\nFIREWALL ACTIVE'
- };
- if(c==='clear')out.textContent='';
- else if(c==='echo')out.textContent+=a.join(' ');
- else if(c==='open'&&a[0])openApp(a[0]);
- else if(c==='reboot')location.reload();
- else out.textContent+=(responses[c]??('command not found: '+c));
- input.value='';out.scrollTop=out.scrollHeight;
-});
-function swapAccent(){
- const root=document.documentElement;const current=getComputedStyle(root).getPropertyValue('--accent').trim();
- root.style.setProperty('--accent',current==='#ff7a00'?'#ff3d9a':'#ff7a00');
-}
-document.querySelectorAll('.window').forEach(w=>{
- const bar=w.querySelector('.titlebar');let drag=false,ox=0,oy=0;
- bar.addEventListener('mousedown',e=>{drag=true;w.style.transform='none';const r=w.getBoundingClientRect();w.style.left=r.left+'px';w.style.top=r.top+'px';ox=e.clientX-r.left;oy=e.clientY-r.top;w.style.zIndex=++topZ});
- window.addEventListener('mousemove',e=>{if(!drag)return;w.style.left=Math.max(0,Math.min(innerWidth-w.offsetWidth,e.clientX-ox))+'px';w.style.top=Math.max(0,Math.min(innerHeight-60-w.offsetHeight,e.clientY-oy))+'px'});
- window.addEventListener('mouseup',()=>drag=false);
- w.addEventListener('mousedown',()=>w.style.zIndex=++topZ);
-});
-setInterval(()=>{
- document.getElementById('cpu').textContent='Usage '+(20+Math.floor(Math.random()*45))+'% · 8 virtual cores';
- document.getElementById('ram').textContent=(3+Math.random()*2).toFixed(1)+' GB / 8 GB allocated';
-},1800);
+function setupNext(){if(setupStep===0){state.name=$('sname').value||'Operator';setupStep=1}else if(setupStep===1){setupStep=2}renderSetup()}
+function finishSetup(){state.company=$('scompany').value||state.company;state.accent=$('saccent').value;state.setup=false;save();document.documentElement.style.setProperty('--cyan',state.accent);$('setupOverlay').style.display='none';updateMode();renderIcons()}
+$('start').onclick=()=>{$('startmenu').style.display=$('startmenu').style.display==='block'?'none':'block'};
+$('appSearch').oninput=e=>document.querySelectorAll('#menuapps [data-open]').forEach(b=>b.parentElement.style.display=b.innerText.toLowerCase().includes(e.target.value.toLowerCase())?'':'none');
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('startmenu').style.display='none';if(e.key==='F1'){e.preventDefault();openSetup(true)}});
+setTimeout(()=>{$('boot').style.display='none';document.documentElement.style.setProperty('--cyan',state.accent||'#00f6ff');renderIcons();updateMode();if(state.setup)openSetup();},1600);
+window.addEventListener('resize',()=>{if(innerWidth<650)document.body.classList.add('mobile')});
 </script>
 </body>
 </html>
