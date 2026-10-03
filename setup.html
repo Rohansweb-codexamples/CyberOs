@@ -1,1 +1,117 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CyberOS Setup</title><style>:root{--c:#00f6ff;--p:#ff2bd6}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#02040a;color:#eaffff;font-family:system-ui;background-image:linear-gradient(#00f6ff0b 1px,transparent 1px),linear-gradient(90deg,#00f6ff0b 1px,transparent 1px);background-size:32px 32px}.panel{width:min(760px,96vw);padding:30px;background:#030914f5;border:1px solid var(--c);box-shadow:0 0 55px #00f6ff25}.logo{color:var(--c);font-weight:900;letter-spacing:4px}.pink{color:var(--p)}h1{font-size:34px}.muted{color:#83a9b7}.steps{display:flex;gap:6px;margin:20px 0}.step{height:5px;flex:1;background:#17232b}.on{background:var(--c);box-shadow:0 0 10px var(--c)}.card{padding:20px;border:1px solid #00f6ff35;background:#06111f}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}input,button{font:inherit;padding:12px;border-radius:5px}input{width:100%;background:#020711;color:white;border:1px solid #00f6ff55;margin:7px 0 14px}button{background:#06152a;color:white;border:1px solid #00f6ff66;cursor:pointer;font-weight:800}button:hover{border-color:var(--c);box-shadow:0 0 15px #00f6ff22}.primary{background:var(--c);color:#02040a}.theme.active{border-color:var(--c);box-shadow:0 0 15px #00f6ff33}</style></head><body><main class="panel"><div class="logo">CYBEROS <span class="pink">V2</span></div><h1>System Setup</h1><p class="muted">Configure your workspace before entering CyberOS.</p><div class="steps"><i class="step on"></i><i class="step"></i><i class="step"></i></div><section id="page"></section></main><script>const S='cyberos-v2-state',D={setup:true,business:false,name:'Operator',company:'CYBER NETWORK',accent:'#00f6ff',theme:'cyber'};const T={cyber:['Cyber Neon','#00f6ff','#ff2bd6'],matrix:['Matrix','#00ff66','#00cc44'],violet:['Violet Pulse','#b36bff','#ff4fd8'],sunset:['Neon Sunset','#ffb000','#ff3b7a'],ice:['Ice Grid','#75e6ff','#8fb8ff']};let state;try{state={...D,...JSON.parse(localStorage.getItem(S)||'null')}}catch(e){state={...D}}let step=0;const esc=x=>String(x??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));function save(){localStorage.setItem(S,JSON.stringify(state))}function render(){document.querySelectorAll('.step').forEach((x,i)=>x.classList.toggle('on',i<=step));if(step===0)page.innerHTML='<div class="card"><h2>Welcome</h2><p class="muted">Choose an operator name.</p><input id="name" value="'+esc(state.name)+'"><button class="primary" onclick="next()">NEXT</button></div>';if(step===1)page.innerHTML='<div class="card"><h2>Workspace</h2><p class="muted">Choose Personal or Business mode.</p><div class="grid"><button onclick="state.business=false;next()">PERSONAL</button><button onclick="state.business=true;next()">BUSINESS</button></div></div>';if(step===2)page.innerHTML='<div class="card"><h2>Customise</h2><label>Company / workspace</label><input id="company" value="'+esc(state.company)+'"><h3>Theme</h3><div class="grid">'+Object.entries(T).map(([k,t])=>'<button class="theme '+(state.theme===k?'active':'')+'" onclick="state.theme=\''+k+'\';state.accent=\''+t[1]+'\';render()"><b>'+t[0]+'</b><br><small>'+t[1]+'</small></button>').join('')+'</div><br><button class="primary" onclick="finish()">FINISH SETUP</button></div>'}function next(){if(step===0)state.name=document.getElementById('name').value||'Operator';step++;render()}function finish(){state.company=document.getElementById('company').value||state.company;state.setup=false;save();location.href='index.html'}render();</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CyberOS Setup</title>
+<style>
+:root{--c:#00f6ff;--p:#ff2bd6;--lime:#a6ff00}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#02040a;color:#eaffff;font-family:system-ui;background-image:linear-gradient(#00f6ff0b 1px,transparent 1px),linear-gradient(90deg,#00f6ff0b 1px,transparent 1px);background-size:32px 32px}
+.panel{width:min(780px,96vw);max-height:94vh;overflow:auto;padding:34px;background:#030914f5;border:1px solid var(--c);box-shadow:0 0 55px #00f6ff25;border-radius:10px}
+.logo{color:var(--c);font-weight:900;letter-spacing:4px;font-size:15px}
+.pink{color:var(--p)}
+h1{font-size:34px;margin:4px 0}
+.muted{color:#83a9b7}
+.steps{display:flex;gap:6px;margin:20px 0 24px}
+.step{height:5px;flex:1;background:#17232b;border-radius:3px;transition:.3s}
+.step.on{background:var(--c);box-shadow:0 0 10px var(--c)}
+.card{padding:20px;border:1px solid #00f6ff35;background:#06111f;border-radius:8px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+input,select,button{font:inherit;padding:12px;border-radius:5px}
+input,select{width:100%;background:#020711;color:white;border:1px solid #00f6ff55;margin:7px 0 14px;outline:none}
+input:focus{border-color:var(--c);box-shadow:0 0 10px rgba(0,246,255,.15)}
+button{background:#06152a;color:white;border:1px solid #00f6ff66;cursor:pointer;font-weight:800;transition:.15s}
+button:hover{border-color:var(--c);box-shadow:0 0 15px #00f6ff22;transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+.primary{background:var(--c);color:#02040a}
+.big-btn{padding:16px 24px;font-size:15px}
+.theme{padding:16px;min-height:80px}
+.theme.active{border-color:var(--c);box-shadow:0 0 15px #00f6ff33;background:#0a2030}
+.mode-card{padding:20px;text-align:center;border-radius:8px;min-height:120px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.mode-card .ico{font-size:32px;font-weight:900}
+.mode-card.active{border-color:var(--c);box-shadow:0 0 18px #00f6ff33;background:#0a2030}
+.app-preview{display:flex;flex-wrap:wrap;gap:8px}
+.app-chip{padding:8px 12px;border:1px solid #00f6ff40;border-radius:6px;font-size:12px;background:#06111f}
+label{color:#83a9b7;font-size:13px;display:block;margin-bottom:4px}
+.preview-bar{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.flex-row{display:flex;gap:10px;align-items:center}
+.flex-row input{flex:1}
+@media(max-width:600px){.panel{padding:20px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<main class="panel">
+  <div class="logo">CYBEROS <span class="pink">V2.1</span></div>
+  <h1>System Setup</h1>
+  <p class="muted">Configure your workspace before entering CyberOS — 5 quick steps.</p>
+  <div class="steps" id="steps"></div>
+  <section id="page"></section>
+</main>
+<script>
+const S='cyberos-v2-state';
+const D={setup:true,setupVersion:3,business:false,name:'Operator',company:'CYBER NETWORK',accent:'#00f6ff',theme:'cyber',serverUrl:'',apps:[],websites:[]};
+const T={
+  cyber:{name:'Cyber Neon',cyan:'#00f6ff',pink:'#ff2bd6',lime:'#a6ff00',bg:'#02040a'},
+  matrix:{name:'Matrix',cyan:'#00ff66',pink:'#00cc44',lime:'#b6ff00',bg:'#020b06'},
+  violet:{name:'Violet Pulse',cyan:'#b36bff',pink:'#ff4fd8',lime:'#f0a6ff',bg:'#08020f'},
+  sunset:{name:'Neon Sunset',cyan:'#ffb000',pink:'#ff3b7a',lime:'#ffe600',bg:'#0d0402'},
+  ice:{name:'Ice Grid',cyan:'#75e6ff',pink:'#8fb8ff',lime:'#d9ffff',bg:'#020912'},
+  blood:{name:'Blood Moon',cyan:'#ff3030',pink:'#ff6090',lime:'#ffaa00',bg:'#0a0202'},
+  ocean:{name:'Deep Ocean',cyan:'#00b4ff',pink:'#0088ff',lime:'#00ffaa',bg:'#020a14'}
+};
+let state;
+try{state={...structuredClone(D),...JSON.parse(localStorage.getItem(S)||'null')}}catch(e){state=structuredClone(D)}
+state=Object.assign(structuredClone(D),state);
+let step=0;
+const TOTAL=5;
+const esc=x=>String(x??'').replace(/[&<>"]/g,m=>({'&':'&','<':'<','>':'>','"':'"'}[m]));
+function save(){localStorage.setItem(S,JSON.stringify(state))}
+function renderSteps(){document.getElementById('steps').innerHTML=Array.from({length:TOTAL}).map((_,i)=>'<i class="step'+(i<=step?' on':'')+'"></i>').join('')}
+function render(){
+  renderSteps();
+  const p=document.getElementById('page');
+  if(step===0)p.innerHTML=`
+    <div class="card"><h2>Welcome to CyberOS</h2><p class="muted">Enter your operator name to begin.</p>
+    <label>Operator name</label><input id="name" value="${esc(state.name)}">
+    <button class="primary big-btn" onclick="next()">CONTINUE →</button></div>`;
+  if(step===1)p.innerHTML=`
+    <div class="card"><h2>Workspace Mode</h2><p class="muted">Choose how you'll use CyberOS. You can switch anytime in Settings.</p>
+    <div class="grid">
+      <button class="mode-card ${!state.business?'active':''}" onclick="state.business=false;render()"><span class="ico">👤</span><strong>PERSONAL</strong><small class="muted">Apps, games & utilities</small></button>
+      <button class="mode-card ${state.business?'active':''}" onclick="state.business=true;render()"><span class="ico">🏢</span><strong>BUSINESS</strong><small class="muted">Contacts, tasks & analytics</small></button>
+    </div>
+    <button class="primary big-btn" style="margin-top:16px;width:100%" onclick="next()">CONTINUE →</button></div>`;
+  if(step===2)p.innerHTML=`
+    <div class="card"><h2>Company & Branding</h2>
+    <label>Company / workspace name</label><input id="company" value="${esc(state.company)}">
+    <label>Accent color</label><input id="accent" type="color" value="${esc(state.accent)}" style="height:50px">
+    <button class="primary big-btn" style="width:100%" onclick="next()">CONTINUE →</button></div>`;
+  if(step===3)p.innerHTML=`
+    <div class="card"><h2>Theme Selection</h2><p class="muted">Pick a complete neon theme for your desktop.</p>
+    <div class="grid">${Object.entries(T).map(([k,t])=>`<button class="theme ${state.theme===k?'active':''}" onclick="state.theme='${k}';state.accent='${t.cyan}';render()"><b>${t.name}</b><br><small style="color:${t.cyan}">${t.cyan}</small><br><small style="color:${t.pink}">${t.pink}</small></button>`).join('')}</div>
+    <button class="primary big-btn" style="margin-top:16px;width:100%" onclick="next()">CONTINUE →</button></div>`;
+  if(step===4)p.innerHTML=`
+    <div class="card"><h2>Server Connection</h2><p class="muted">Connect to your CyberOS Business Server on Render for cloud sync (contacts, tasks, notes). You can skip this and add it later in Settings.</p>
+    <label>Business server URL</label>
+    <div class="flex-row"><input id="serverUrl" value="${esc(state.serverUrl||'')}" placeholder="https://your-app.onrender.com"></div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="primary big-btn" style="flex:1" onclick="finish(true)">CONNECT & FINISH</button>
+      <button class="big-btn" style="flex:1" onclick="finish(false)">SKIP & FINISH</button>
+    </div></div>
+    <div class="card" style="text-align:center"><p class="muted">CyberOS ${state.business?'Business':'Personal'} • ${Object.keys(T).length} themes • ${state.company||'Workspace'}</p></div>`;
+}
+function next(){
+  if(step===0){state.name=document.getElementById('name').value||'Operator';}
+  if(step===2){state.company=document.getElementById('company').value||state.company;state.accent=document.getElementById('accent').value;}
+  step++;render();
+}
+function finish(connect){
+  if(connect){state.serverUrl=document.getElementById('serverUrl').value.trim().replace(/\/$/,'');}
+  state.setup=false;state.setupVersion=3;save();
+  location.href='index.html';
+}
+render();
+</script>
+</body>
+</html>
