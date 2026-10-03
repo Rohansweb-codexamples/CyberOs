@@ -3,43 +3,175 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CyberOS v2.1</title>
+<title>CyberOS v3.0 — Linux Edition</title>
 <meta name="theme-color" content="#050812">
 <style>
-:root{--cyan:#00f6ff;--pink:#ff2bd6;--lime:#a6ff00;--theme-bg:#02040a;--bg:#050812;--panel:rgba(28,30,38,.92);--line:rgba(255,255,255,.1);--text:#eaffff;--muted:#83a9b7;--accent:#0067c0;--taskbar-bg:rgba(20,22,30,.85);--win-hover:rgba(255,255,255,.08)}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0a0a14;color:var(--text);font-family:'Segoe UI',Inter,system-ui,Arial,sans-serif}
-body{background:linear-gradient(135deg,#0a1028 0%,#0d1a3a 35%,#1a0a2a 70%,#0a0a14 100%)}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.06;background-image:linear-gradient(rgba(0,246,255,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(0,246,255,.15) 1px,transparent 1px);background-size:48px 48px}
-button,input,select,textarea{font:inherit}button{color:var(--text);border:1px solid var(--line);background:rgba(255,255,255,.05);cursor:pointer;transition:.12s;border-radius:4px}
-button:hover{background:var(--win-hover);border-color:rgba(255,255,255,.2)}button:active{transform:translateY(1px)}
-#boot{position:fixed;inset:0;z-index:9999;background:#0a0a14;display:none;place-items:center}.bootbox{width:min(650px,90vw);font-family:ui-monospace,monospace;color:var(--cyan)}.bar{height:6px;border:1px solid var(--cyan);border-radius:4px;margin-top:16px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--cyan);border-radius:4px;animation:boot 1.5s forwards}@keyframes boot{to{width:100%}}
-#desktop{position:fixed;inset:0 0 56px 0}.wall{position:absolute;inset:0;overflow:hidden}
-.orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.3;animation:float 12s ease-in-out infinite}.o1{width:340px;height:340px;background:var(--cyan);left:5%;top:10%}.o2{width:380px;height:380px;background:var(--pink);right:2%;bottom:5%;animation-delay:-5s}@keyframes float{50%{transform:translate(60px,-30px) scale(1.12)}}
-#top{position:absolute;left:16px;right:16px;top:12px;height:50px;display:flex;align-items:center;justify-content:space-between;z-index:20}.brand{font-weight:600;letter-spacing:1px;color:rgba(255,255,255,.9);font-size:15px}.brand .pink{font-size:12px;opacity:.7}.status{display:flex;gap:8px;align-items:center}.chip{padding:6px 12px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:12px;border-radius:6px;color:rgba(255,255,255,.7)}
-#icons{position:absolute;top:82px;left:18px;display:grid;grid-template-columns:repeat(auto-fill,96px);gap:8px;z-index:5;max-height:calc(100vh - 160px);overflow:auto;padding-right:8px}.appicon{height:90px;border-radius:8px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;font-size:11px;transition:.15s;background:transparent;border:none}.appicon .ico{font-size:28px;color:var(--cyan);font-weight:900;width:44px;height:44px;display:grid;place-items:center;border-radius:10px;background:rgba(255,255,255,.08);margin-bottom:2px}.appicon:hover{background:rgba(255,255,255,.08);border-radius:8px}.appicon:hover .ico{background:rgba(0,103,192,.25)}
-.window{position:absolute;display:none;flex-direction:column;width:min(820px,calc(100vw - 34px));height:min(580px,calc(100vh - 110px));min-width:280px;min-height:180px;background:var(--panel);border:1px solid rgba(255,255,255,.12);box-shadow:0 16px 48px rgba(0,0,0,.5),0 0 0 1px rgba(0,0,0,.3);backdrop-filter:blur(30px);border-radius:10px;overflow:hidden;z-index:30}.window.open{display:flex;animation:open .14s ease-out;contain:layout paint}.window .content{overflow:auto;overscroll-behavior:contain}.window iframe{display:block;max-width:100%;max-height:100%;overflow:hidden}@keyframes open{from{opacity:0;transform:scale(.97) translateY(8px)}to{opacity:1;transform:none}}.window.active{z-index:100;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(0,103,192,.4)}.titlebar{height:40px;flex:none;display:flex;align-items:center;gap:8px;padding:0 0 0 14px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);cursor:default}.titlebar:active{cursor:grabbing}.title{font-weight:600;font-size:13px;flex:1;letter-spacing:.3px;color:rgba(255,255,255,.9)}.win-controls{display:flex;height:100%}.winbtn{width:46px;height:100%;border:none;border-radius:0;background:transparent;display:grid;place-items:center;font-size:11px;color:rgba(255,255,255,.7);transition:.1s}.winbtn:hover{background:rgba(255,255,255,.1)}.winbtn.close:hover{background:#e81123;color:#fff}.content{flex:1;min-height:0;overflow:auto;padding:16px}.content::-webkit-scrollbar{width:8px}.content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}.content::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.35)}
-.card{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:14px;border-radius:8px;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.cyberbtn{padding:10px 16px;border-radius:6px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;font-size:12px}.field{display:grid;gap:6px;margin:10px 0}.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--text);outline:none;border-radius:6px}.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}.muted{color:var(--muted);font-size:13px}.neon{color:var(--cyan)}.pink{color:var(--pink)}.lime{color:var(--lime)}.big{font-size:28px;font-weight:700}.stat{font-size:11px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}.list{display:grid;gap:6px}.listrow{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:6px}.listrow span:first-child{flex:1}
-#taskbar{position:fixed;z-index:500;left:0;right:0;bottom:0;height:56px;background:var(--taskbar-bg);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;padding:0 8px;backdrop-filter:blur(30px) saturate(180%)}.taskbar-left{flex:1;min-width:0}#start{height:42px;width:42px;border:none;background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;transition:.12s}#start:hover{background:rgba(255,255,255,.1)}.win-logo{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;width:18px;height:18px}.win-logo i{border-radius:1px}.win-logo i:nth-child(1){background:#0067c0}.win-logo i:nth-child(2){background:#00b4ff}.win-logo i:nth-child(3){background:#0099bc}.win-logo i:nth-child(4){background:#0078d4}
-.taskbar-center{display:flex;align-items:center;gap:6px;justify-content:center}.tasks{display:flex;gap:4px;overflow:auto;align-items:center}.task{height:42px;min-width:44px;padding:0 12px;border-radius:6px;border:none;background:transparent;color:rgba(255,255,255,.85);font-size:12px;display:flex;align-items:center;gap:8px;transition:.1s;cursor:pointer}.task:hover{background:rgba(255,255,255,.1)}.task:active{background:rgba(0,103,192,.3)}
-.taskbar-right{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:6px;padding-right:4px}.clock{font-size:12px;color:rgba(255,255,255,.8);text-align:right;line-height:1.3;cursor:default;padding:4px 10px;border-radius:6px;transition:.1s}.clock:hover{background:rgba(255,255,255,.08)}
-.tray-icon{width:32px;height:32px;border:none;background:transparent;border-radius:6px;color:rgba(255,255,255,.7);display:grid;place-items:center;cursor:pointer;font-size:14px;transition:.1s}.tray-icon:hover{background:rgba(255,255,255,.1)}
-#startmenu{position:fixed;z-index:600;left:50%;transform:translateX(-50%);bottom:66px;width:min(640px,calc(100vw - 40px));max-height:72vh;overflow:auto;display:none;background:var(--panel);border:1px solid rgba(255,255,255,.1);box-shadow:0 16px 48px rgba(0,0,0,.5);padding:24px 28px;border-radius:12px;backdrop-filter:blur(40px) saturate(180%)}.search{padding:10px 16px;width:100%;margin-bottom:20px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text);border-radius:24px;outline:none}.search:focus{border-color:var(--accent);background:rgba(255,255,255,.08)}.menuapps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.menuapps .appicon{height:80px;font-size:11px;border-radius:8px}.menuapps .appicon .ico{width:38px;height:38px;font-size:22px;border-radius:8px}.menuapps .appicon:hover{background:rgba(255,255,255,.1)}
-#setupOverlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.6);display:none;place-items:center;padding:20px;backdrop-filter:blur(8px)}.setup{width:min(720px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(255,255,255,.1);background:var(--panel);padding:32px;box-shadow:0 16px 48px rgba(0,0,0,.5);border-radius:12px;backdrop-filter:blur(40px)}.steps{display:flex;gap:6px;margin-bottom:20px}.step{height:4px;flex:1;background:rgba(255,255,255,.1);border-radius:2px}.step.on{background:var(--accent)}
-.themegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.themebtn{min-height:72px;padding:10px;text-align:left;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.04)}.themebtn:hover{background:rgba(255,255,255,.08)}.themebtn strong{display:block}.themebtn small{color:var(--muted)}.appdash{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.appdash .card{min-height:120px}.business{border-left:3px solid var(--pink);padding-left:12px}
+:root{--cyan:#00f6ff;--pink:#ff2bd6;--lime:#a6ff00;--theme-bg:#02040a;--bg:#050812;--glass:rgba(22,26,36,.5);--glass-strong:rgba(18,22,32,.7);--line:rgba(255,255,255,.1);--text:#eaffff;--muted:#83a9b7;--accent:#00f6ff;--radius:14px}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;color:var(--text);font-family:'Ubuntu','Segoe UI',Inter,system-ui,Arial,sans-serif}
+body{background:linear-gradient(135deg,#0a1530 0%,#0d1030 40%,#1a0a2e 70%,#050514 100%)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;background-image:linear-gradient(rgba(0,246,255,.2) 1px,transparent 1px),linear-gradient(90deg,rgba(0,246,255,.2) 1px,transparent 1px);background-size:48px 48px}
+button,input,select,textarea{font:inherit}button{color:var(--text);border:1px solid var(--line);background:rgba(255,255,255,.05);cursor:pointer;transition:.12s;border-radius:8px}button:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}button:active{transform:translateY(1px)}
+
+/* ── Boot Screen ── */
+#boot{position:fixed;inset:0;z-index:9999;background:#050514;display:none;place-items:center;font-family:ui-monospace,monospace}.bootbox{width:min(680px,92vw);color:var(--lime)}.boot-logo{font-size:22px;font-weight:700;color:var(--cyan);letter-spacing:2px;margin-bottom:8px}.bootbar{height:4px;border:1px solid var(--cyan);border-radius:4px;margin:12px 0;overflow:hidden}.bootbar i{display:block;height:100%;width:0;background:var(--cyan);border-radius:4px;animation:boot 2s forwards}@keyframes boot{to{width:100%}}#bootlog{font-size:12px;line-height:1.8;max-height:260px;overflow:auto;color:var(--lime);opacity:.8}#bootlog .ok{color:var(--lime)}#bootlog .err{color:var(--pink)}
+
+/* ── Desktop ── */
+#desktop{position:fixed;inset:0 0 0 72px;z-index:0}
+.wall{position:absolute;inset:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.2;animation:float 14s ease-in-out infinite}.o1{width:360px;height:360px;background:var(--cyan);left:8%;top:8%}.o2{width:420px;height:420px;background:var(--pink);right:5%;bottom:8%;animation-delay:-6s}@keyframes float{50%{transform:translate(50px,-30px) scale(1.12)}}
+
+/* ── Desktop Icons ── */
+#icons{position:absolute;top:70px;right:18px;display:grid;grid-template-columns:repeat(auto-fill,90px);gap:6px;z-index:5;max-height:calc(100vh - 150px);overflow:auto;padding:4px}
+.appicon{height:84px;border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;font-size:11px;transition:.15s;background:transparent;border:none}
+.appicon .ico{font-size:24px;color:var(--cyan);font-weight:900;width:42px;height:42px;display:grid;place-items:center;border-radius:11px;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--line);margin-bottom:2px}
+.appicon:hover{background:rgba(255,255,255,.08);border-radius:10px}.appicon:hover .ico{background:rgba(0,246,255,.15);border-color:var(--cyan)}
+
+/* ── Windows ── */
+.window{position:absolute;display:none;flex-direction:column;width:min(820px,calc(100vw - 120px));height:min(580px,calc(100vh - 120px));min-width:280px;min-height:180px;background:var(--glass-strong);border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 64px rgba(0,0,0,.5);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-radius:var(--radius);overflow:hidden;z-index:30}
+.window.open{display:flex;animation:open .18s cubic-bezier(.2,.9,.3,1.1);contain:layout paint}@keyframes open{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:none}}
+.window.active{z-index:100;box-shadow:0 28px 72px rgba(0,0,0,.6),0 0 0 1px rgba(0,246,255,.3)}
+.window .content{overflow:auto;overscroll-behavior:contain}
+.window iframe{display:block;max-width:100%;max-height:100%;overflow:hidden}
+.titlebar{height:42px;flex:none;display:flex;align-items:center;gap:8px;padding:0 10px 0 14px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);cursor:default;border-radius:var(--radius) var(--radius) 0 0}
+.titlebar:active{cursor:grabbing}
+.title{font-weight:600;font-size:13px;flex:1;letter-spacing:.3px;color:rgba(255,255,255,.9)}
+.win-controls{display:flex;height:100%;gap:4px;align-items:center}
+.winbtn{width:34px;height:30px;border:none;border-radius:8px;background:transparent;display:grid;place-items:center;font-size:12px;color:rgba(255,255,255,.6);transition:.1s}
+.winbtn:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9)}
+.winbtn.close:hover{background:#e81123;color:#fff}
+.content{flex:1;min-height:0;overflow:auto;padding:16px}
+.content::-webkit-scrollbar{width:8px}.content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}.content::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.35)}
+
+/* ── Content Styles ── */
+.card{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:14px;border-radius:10px;margin-bottom:12px;backdrop-filter:blur(10px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.cyberbtn{padding:10px 16px;border-radius:8px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;font-size:12px}
+.field{display:grid;gap:6px;margin:10px 0}
+.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--text);outline:none;border-radius:8px}
+.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.muted{color:var(--muted);font-size:13px}.neon{color:var(--cyan)}.pink{color:var(--pink)}.lime{color:var(--lime)}
+.big{font-size:28px;font-weight:700}.stat{font-size:11px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.list{display:grid;gap:6px}.listrow{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:8px}.listrow span:first-child{flex:1}
+
+/* ── GNOME Top Bar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:32px;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:rgba(8,10,16,.7);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+.top-left{display:flex;align-items:center;gap:10px}
+.activities{padding:2px 12px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.9);font-weight:500;transition:.12s;border:none;background:transparent}
+.activities:hover{background:rgba(255,255,255,.12)}
+.app-name{color:rgba(255,255,255,.6);font-size:12px}
+.top-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px}
+.topbar-clock{cursor:pointer;padding:2px 12px;border-radius:8px;color:rgba(255,255,255,.9);font-weight:500;transition:.12s;display:flex;align-items:center;gap:8px}
+.topbar-clock:hover{background:rgba(255,255,255,.12)}
+.top-right{display:flex;align-items:center;gap:4px}
+.tb-icon{width:28px;height:24px;border:none;background:transparent;border-radius:6px;color:rgba(255,255,255,.7);display:grid;place-items:center;cursor:pointer;font-size:13px;transition:.1s}
+.tb-icon:hover{background:rgba(255,255,255,.12);color:#fff}
+.tb-divider{width:1px;height:16px;background:rgba(255,255,255,.15);margin:0 4px}
+
+/* ── Ubuntu Dock (Left) ── */
+#dock{position:fixed;left:0;top:32px;bottom:0;width:72px;z-index:400;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;background:rgba(8,10,16,.65);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-right:1px solid rgba(255,255,255,.06)}
+.dock-btn{width:52px;height:52px;border-radius:12px;border:none;background:transparent;display:grid;place-items:center;cursor:pointer;transition:.15s;font-size:18px;font-weight:900;color:var(--cyan);position:relative}
+.dock-btn .ic{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--line);font-size:16px;font-weight:900;color:var(--cyan)}
+.dock-btn:hover{transform:scale(1.08)}.dock-btn:hover .ic{background:rgba(0,246,255,.15);border-color:var(--cyan)}
+.dock-btn.active .ic{background:rgba(0,246,255,.2);border-color:var(--cyan)}
+.dock-btn.running .ic::after{content:"";position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:6px;height:3px;border-radius:2px;background:var(--cyan)}
+#dockScroll{display:flex;flex-direction:column;gap:6px;overflow-y:auto;overflow-x:hidden;max-height:calc(100vh - 120px);scrollbar-width:none}#dockScroll::-webkit-scrollbar{display:none}
+.dock-sep{width:36px;height:1px;background:rgba(255,255,255,.08);margin:4px 0}
+
+/* ── Activities Overview ── */
+#activities{position:fixed;inset:32px 0 0 72px;z-index:600;display:none;flex-direction:column;background:rgba(5,8,18,.8);backdrop-filter:blur(60px) saturate(180%);-webkit-backdrop-filter:blur(60px) saturate(180%);padding:24px;overflow:auto}
+#activities.open{display:flex;animation:fadeIn .2s}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.activities-search{width:min(500px,80vw);margin:0 auto 20px;padding:12px 20px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--text);border-radius:24px;outline:none;text-align:center;font-size:15px}
+.activities-search:focus{border-color:var(--accent);background:rgba(255,255,255,.12)}
+.activities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;max-width:900px;margin:0 auto;width:100%}
+.activities-grid .appicon{height:96px;border-radius:12px}
+.activities-grid .appicon .ico{width:48px;height:48px;font-size:22px;border-radius:13px}
+
+/* ── System Menu (top-right dropdown) ── */
+#sysmenu{position:fixed;top:38px;right:8px;z-index:650;width:min(380px,90vw);max-height:80vh;overflow:auto;display:none;background:var(--glass-strong);border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 64px rgba(0,0,0,.5);padding:16px;border-radius:16px;backdrop-filter:blur(50px) saturate(180%);-webkit-backdrop-filter:blur(50px) saturate(180%)}
+#sysmenu.open{display:block;animation:fadeIn .15s}
+.sysm-section{margin-bottom:12px}
+.sysm-section h4{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.sysm-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:.1s;border:none;background:rgba(255,255,255,.04)}
+.sysm-row:hover{background:rgba(255,255,255,.1)}
+.sysm-row .si{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:16px}
+.sysm-row .st{flex:1}.sysm-row .st strong{display:block;font-size:13px}.sysm-row .st small{font-size:11px;color:var(--muted)}
+.sysm-slider{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.1);position:relative;margin:8px 0;cursor:pointer}.sysm-slider i{display:block;height:100%;border-radius:3px;background:var(--cyan)}
+.sysm-slider .knob{position:absolute;top:-5px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+
+/* ── Setup Overlay ── */
+#setupOverlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.5);display:none;place-items:center;padding:20px;backdrop-filter:blur(12px)}
+.setup{width:min(720px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(255,255,255,.1);background:var(--glass-strong);padding:32px;box-shadow:0 24px 64px rgba(0,0,0,.5);border-radius:16px;backdrop-filter:blur(50px) saturate(180%)}
+.steps{display:flex;gap:6px;margin-bottom:20px}.step{height:4px;flex:1;background:rgba(255,255,255,.1);border-radius:2px}.step.on{background:var(--accent)}.step.done{background:var(--lime)}
+.themegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.themebtn{min-height:72px;padding:10px;text-align:left;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.04)}.themebtn:hover{background:rgba(255,255,255,.08)}.themebtn strong{display:block}.themebtn small{color:var(--muted)}
+.appdash{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.appdash .card{min-height:120px}.business{border-left:3px solid var(--pink);padding-left:12px}
 .gamewrap{display:grid;place-items:center;min-height:100%}.game-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.badge{padding:4px 12px;border:1px solid var(--line);border-radius:20px;font-size:12px;background:rgba(255,255,255,.05)}
-.board{display:grid;gap:4px}.cell{display:grid;place-items:center;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.03);font-weight:900;cursor:pointer;transition:.1s}.cell:hover{background:rgba(255,255,255,.08)}.snake-cell{display:inline-block;width:24px;height:24px;border-radius:3px}
-body.mobile #icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px}.mobile #icons .appicon{height:70px}.mobile .window{left:8px!important;top:62px!important;width:calc(100vw - 16px)!important;height:calc(100vh - 126px)!important;min-width:0}.mobile .titlebar{height:44px}.mobile #top{left:8px;right:8px}.mobile .chip.hide-mobile{display:none}
-@media(max-width:650px){#icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px;gap:6px}.appicon{height:70px}.appicon .ico{font-size:20px;width:38px;height:38px}.brand{font-size:13px}.status .chip:nth-child(2){display:none}.window{left:8px!important;top:68px!important;width:calc(100vw - 16px)!important;height:calc(100vh - 130px)!important}.titlebar{height:44px}.content{padding:12px}.menuapps{grid-template-columns:repeat(3,1fr)}}
+.board{display:grid;gap:4px}.cell{display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);font-weight:900;cursor:pointer;transition:.1s}.cell:hover{background:rgba(255,255,255,.08)}.snake-cell{display:inline-block;width:24px;height:24px;border-radius:3px}
+
+/* ── Responsive ── */
+body.mobile #dock{width:56px}body.mobile #desktop{left:56px}body.mobile #icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px}.mobile .window{left:8px!important;top:44px!important;width:calc(100vw - 64px)!important;height:calc(100vh - 100px)!important;min-width:0}
+@media(max-width:650px){
+  #dock{width:56px}#desktop{left:56px}
+  #icons{grid-template-columns:repeat(4,1fr);left:8px;right:8px;gap:6px}.appicon{height:72px}.appicon .ico{font-size:20px;width:38px;height:38px}
+  .window{left:8px!important;top:42px!important;width:calc(100vw - 64px)!important;height:calc(100vh - 96px)!important}
+  .content{padding:12px}.activities-grid{grid-template-columns:repeat(3,1fr)}
+  .app-name{display:none}.tb-icon{width:24px}
+}
 </style>
 </head>
 <body>
-<div id="boot"><div class="bootbox"><div class="big">CYBEROS // V2.1</div><div class="muted">INITIALISING NEURAL DESKTOP...</div><div class="bar"><i></i></div><div id="bootlog" style="margin-top:12px;font-size:12px"></div></div></div>
-<div id="desktop"><div class="wall"><div class="orb o1"></div><div class="orb o2"></div></div>
-<div id="top"><div class="brand">CYBEROS <span class="pink">V2.1</span></div><div class="status"><div class="chip" id="modeChip">PERSONAL</div><div class="chip hide-mobile" id="netChip">SYSTEM ONLINE</div></div></div>
-<div id="icons"></div></div>
-<div id="taskbar"><div class="taskbar-left"></div><div class="taskbar-center"><button id="start"><div class="win-logo"><i></i><i></i><i></i><i></i></div></button><div class="tasks" id="tasks"></div></div><div class="taskbar-right"><span class="tray-icon" title="Network">📶</span><span class="tray-icon" title="Volume">🔊</span><div class="clock" id="clock"></div></div></div>
-<div id="startmenu"><input class="search" id="appSearch" placeholder="Search for apps"><div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.6);margin:4px 0 12px;text-transform:uppercase;letter-spacing:1px">Pinned</div><div class="menuapps" id="menuapps"></div></div>
+<div id="boot"><div class="bootbox"><div class="boot-logo">CYBEROS v3.0 // LINUX EDITION</div><div class="muted" style="color:rgba(255,255,255,.4)">Initialising system services...</div><div class="bootbar"><i></i></div><div id="bootlog"></div></div></div>
+
+<!-- GNOME Top Bar -->
+<div id="topbar">
+  <div class="top-left"><button class="activities" id="activitiesBtn">Activities</button><span class="app-name" id="appName">Desktop</span></div>
+  <div class="top-center"><div class="topbar-clock" id="topbarClock"></div></div>
+  <div class="top-right">
+    <span class="tb-icon" id="tbNet" title="Network">🌐</span>
+    <span class="tb-icon" id="tbVol" title="Volume">🔊</span>
+    <span class="tb-icon" id="tbBat" title="Power">⚡</span>
+    <span class="tb-divider"></span>
+    <span class="tb-icon" id="tbSys" title="System Menu">⚙</span>
+  </div>
+</div>
+
+<!-- Ubuntu Dock -->
+<div id="dock">
+  <div id="dockScroll"></div>
+</div>
+
+<!-- System Menu -->
+<div id="sysmenu">
+  <div class="sysm-section">
+    <h4>System</h4>
+    <div class="sysm-row" onclick="openSettings()"><span class="si">⚙</span><span class="st"><strong>Settings</strong><small>Configure your system</small></span></div>
+    <div class="sysm-row" onclick="openBusiness()"><span class="si">💼</span><span class="st"><strong>Business Hub</strong><small>Contacts, tasks, analytics</small></span></div>
+    <div class="sysm-row" onclick="openPages()"><span class="si">📄</span><span class="st"><strong>HTML Pages</strong><small>Web page builder</small></span></div>
+    <div class="sysm-row" onclick="toggleMobile()"><span class="si">📱</span><span class="st"><strong>Mobile Mode</strong><small>Toggle compact layout</small></span></div>
+  </div>
+  <div class="sysm-section">
+    <h4>Volume</h4>
+    <div class="sysm-slider"><i style="width:65%"></i><span class="knob" style="left:65%"></span></div>
+  </div>
+  <div class="sysm-section">
+    <h4>Account</h4>
+    <div class="sysm-row" style="cursor:default"><span class="si">👤</span><span class="st"><strong id="sysmUser">Operator</strong><small id="sysmMode">Personal Mode</small></span></div>
+    <div class="sysm-row" onclick="openSetup(true)"><span class="si">🔄</span><span class="st"><strong>Run Setup</strong><small>Reconfigure system</small></span></div>
+    <div class="sysm-row" onclick="if(confirm('Restart CyberOS?'))location.reload()"><span class="si">⏻</span><span class="st"><strong>Restart</strong><small>Reboot the system</small></span></div>
+  </div>
+</div>
+
+<!-- Activities Overview -->
+<div id="activities">
+  <input class="activities-search" id="appSearch" placeholder="Type to search applications...">
+  <div class="activities-grid" id="activitiesGrid"></div>
+</div>
+
+<!-- Desktop -->
+<div id="desktop"><div class="wall"><div class="orb o1"></div><div class="orb o2"></div></div><div id="icons"></div></div>
+
+<!-- Setup Overlay -->
 <div id="setupOverlay"><div class="setup"><div class="steps" id="setupSteps"></div><div id="setupBody"></div></div></div>
+
 <script src="js/apps.js"></script>
 <script src="js/os.js"></script>
 </body>
