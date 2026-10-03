@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CyberOS</title>
+<style>
+:root{
+  --bg:#04060b;--panel:rgba(8,14,22,.82);--line:#23f7ff;--accent:#ff7a00;--text:#e7fbff;--muted:#7ea2aa;
+}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Consolas,monospace;background:#03050a;color:var(--text)}
+body{background:
+radial-gradient(circle at 20% 20%,rgba(35,247,255,.12),transparent 30%),
+radial-gradient(circle at 80% 80%,rgba(255,122,0,.12),transparent 30%),
+linear-gradient(135deg,#02050a,#07101a 48%,#020408)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.018) 4px);mix-blend-mode:screen}
+#desktop{position:absolute;inset:0 0 52px 0;padding:24px;overflow:hidden}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(35,247,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(35,247,255,.035) 1px,transparent 1px);background-size:40px 40px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent)}
+.brand{position:absolute;left:26px;top:20px;font-size:28px;font-weight:800;letter-spacing:4px;color:var(--line);text-shadow:0 0 18px rgba(35,247,255,.55)}
+.status{position:absolute;right:24px;top:20px;font-size:12px;color:var(--muted);text-align:right;line-height:1.6}
+.icons{position:relative;z-index:2;display:grid;grid-template-columns:repeat(2,90px);gap:18px;width:max-content;margin-top:64px}
+.icon{width:86px;height:84px;border:1px solid rgba(35,247,255,.18);background:rgba(5,12,18,.52);backdrop-filter:blur(8px);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;cursor:pointer;transition:.18s}
+.icon:hover{transform:translateY(-3px);border-color:var(--line);box-shadow:0 0 22px rgba(35,247,255,.18)}
+.icon .glyph{font-size:30px;line-height:1}.icon span{font-size:11px}
+.window{position:absolute;width:min(760px,80vw);height:min(470px,70vh);left:50%;top:50%;transform:translate(-50%,-50%);background:var(--panel);border:1px solid rgba(35,247,255,.45);box-shadow:0 0 35px rgba(35,247,255,.15),0 20px 70px rgba(0,0,0,.55);backdrop-filter:blur(18px);border-radius:16px;overflow:hidden;display:none;z-index:10}
+.window.active{display:block}.titlebar{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;border-bottom:1px solid rgba(35,247,255,.22);background:rgba(3,10,15,.9);cursor:move}
+.title{font-size:12px;letter-spacing:1.6px;color:var(--line)}
+.controls button{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:var(--text);cursor:pointer}.controls button:hover{background:rgba(255,255,255,.08)}
+.content{height:calc(100% - 42px);padding:16px;overflow:auto}
+.card{border:1px solid rgba(35,247,255,.18);background:rgba(1,7,12,.5);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 8px;color:var(--line);font-size:14px}.card p{margin:0;color:#b8cbd0;font-size:12px;line-height:1.6}
+.terminal{height:100%;display:flex;flex-direction:column;background:#010305;color:#77ff9a}
+.termout{flex:1;overflow:auto;padding:14px;white-space:pre-wrap;font-size:13px;line-height:1.5}.termin{display:flex;border-top:1px solid #163821}.termin span{padding:10px;color:#23f7ff}.termin input{flex:1;background:#000;border:0;outline:0;color:#77ff9a;font-family:inherit;padding:10px}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}.file{padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.03);cursor:pointer}.file:hover{border-color:var(--line)}
+.searchbox{display:flex;gap:8px}.searchbox input{flex:1;background:#03080e;border:1px solid rgba(35,247,255,.25);color:white;border-radius:10px;padding:12px;outline:none}.btn{border:1px solid rgba(35,247,255,.4);background:rgba(35,247,255,.09);color:var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}.btn:hover{background:rgba(35,247,255,.16)}
+.setting{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)}input[type=range]{accent-color:#23f7ff}
+#taskbar{position:fixed;bottom:0;left:0;right:0;height:52px;background:rgba(2,7,12,.88);backdrop-filter:blur(18px);border-top:1px solid rgba(35,247,255,.25);display:flex;align-items:center;gap:8px;padding:0 10px;z-index:99}
+#start{width:38px;height:38px;border:1px solid rgba(35,247,255,.35);border-radius:10px;background:rgba(35,247,255,.08);color:var(--line);font-weight:bold;cursor:pointer}.task{height:36px;min-width:36px;padding:0 12px;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(255,255,255,.03);color:white;cursor:pointer}.spacer{flex:1}.clock{text-align:right;font-size:11px;color:#c9eef2}
+#menu{position:fixed;left:10px;bottom:60px;width:300px;background:rgba(4,11,18,.96);border:1px solid rgba(35,247,255,.35);border-radius:16px;padding:14px;z-index:100;display:none;box-shadow:0 0 30px rgba(35,247,255,.12)}
+#menu.show{display:block}.menuhead{font-size:20px;color:var(--line);margin-bottom:12px}.menuitem{padding:11px;border-radius:9px;cursor:pointer}.menuitem:hover{background:rgba(35,247,255,.08)}
+.boot{position:fixed;inset:0;background:#010308;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:.6s}
+.boot.hide{opacity:0;pointer-events:none}.bootlogo{font-size:44px;letter-spacing:8px;color:var(--line);text-shadow:0 0 25px rgba(35,247,255,.7)}.bootbar{width:280px;height:4px;background:#0a151c;margin-top:25px;overflow:hidden}.bootbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--line),var(--accent));animation:load 1.8s forwards}@keyframes load{to{width:100%}}
+@media(max-width:700px){.window{width:94vw;height:72vh}.status{display:none}.brand{font-size:20px}.icons{grid-template-columns:repeat(2,78px)}}
+</style>
+</head>
+<body>
+<div class="boot" id="boot"><div class="bootlogo">CYBEROS</div><div style="margin-top:8px;color:#63828b;font-size:12px">SECURE WEB SYSTEM</div><div class="bootbar"><i></i></div></div>
+<div id="desktop">
+  <div class="grid"></div>
+  <div class="brand">CYBEROS <span style="color:var(--accent)">01</span></div>
+  <div class="status">NETWORK: ONLINE<br>CORE: STABLE<br>SECURITY: ACTIVE</div>
+  <div class="icons">
+    <div class="icon" onclick="openApp('terminal')"><div class="glyph">⌘</div><span>Terminal</span></div>
+    <div class="icon" onclick="openApp('files')"><div class="glyph">▣</div><span>Files</span></div>
+    <div class="icon" onclick="openApp('browser')"><div class="glyph">◎</div><span>Browser</span></div>
+    <div class="icon" onclick="openApp('system')"><div class="glyph">◫</div><span>System</span></div>
+    <div class="icon" onclick="openApp('settings')"><div class="glyph">⚙</div><span>Settings</span></div>
+  </div>
+</div>
+
+<div class="window" id="terminal">
+ <div class="titlebar"><div class="title">CYBER TERMINAL</div><div class="controls"><button onclick="closeApp('terminal')">×</button></div></div>
+ <div class="content" style="padding:0"><div class="terminal"><div class="termout" id="termout">CyberOS Terminal v1.0
+Type "help" for commands.
+</div><div class="termin"><span>root@cyberos:~$</span><input id="terminput" autocomplete="off"></div></div></div>
+</div>
+
+<div class="window" id="files">
+ <div class="titlebar"><div class="title">FILE MATRIX</div><div class="controls"><button onclick="closeApp('files')">×</button></div></div>
+ <div class="content"><div class="files">
+  <div class="file">▣<br><br>Documents</div><div class="file">▣<br><br>Downloads</div><div class="file">▣<br><br>Media</div><div class="file">▣<br><br>Projects</div><div class="file">▤<br><br>readme.txt</div>
+ </div></div>
+</div>
+
+<div class="window" id="browser">
+ <div class="titlebar"><div class="title">CYBER BROWSER</div><div class="controls"><button onclick="closeApp('browser')">×</button></div></div>
+ <div class="content">
+  <div class="searchbox"><input id="search" placeholder="Search the web or enter a URL"><button class="btn" onclick="goSearch()">GO</button></div>
+  <div class="card" style="margin-top:16px"><h3>CyberOS Browser</h3><p>Search launches in a new tab. Enter a full URL or search phrase.</p></div>
+ </div>
+</div>
+
+<div class="window" id="system">
+ <div class="titlebar"><div class="title">SYSTEM MONITOR</div><div class="controls"><button onclick="closeApp('system')">×</button></div></div>
+ <div class="content">
+  <div class="card"><h3>CPU CORE</h3><p id="cpu">Usage 34% · 8 virtual cores</p></div>
+  <div class="card"><h3>MEMORY</h3><p id="ram">3.8 GB / 8 GB allocated</p></div>
+  <div class="card"><h3>NETWORK</h3><p>Encrypted tunnel active · latency 12ms</p></div>
+  <div class="card"><h3>SECURITY</h3><p>Firewall enabled · browser sandbox active</p></div>
+ </div>
+</div>
+
+<div class="window" id="settings">
+ <div class="titlebar"><div class="title">SYSTEM SETTINGS</div><div class="controls"><button onclick="closeApp('settings')">×</button></div></div>
+ <div class="content">
+  <div class="setting"><span>Glow intensity</span><input type="range" min="0" max="100" value="55" oninput="document.body.style.filter='saturate('+(0.7+this.value/100)+')'"></div>
+  <div class="setting"><span>Orange accent</span><button class="btn" onclick="swapAccent()">SWAP</button></div>
+  <div class="setting"><span>Desktop effects</span><button class="btn" onclick="document.querySelector('.grid').style.display=document.querySelector('.grid').style.display==='none'?'block':'none'">TOGGLE</button></div>
+  <div class="setting"><span>Reset CyberOS</span><button class="btn" onclick="location.reload()">REBOOT</button></div>
+ </div>
+</div>
+
+<div id="menu">
+ <div class="menuhead">CYBEROS</div>
+ <div class="menuitem" onclick="openApp('terminal');toggleMenu()">Terminal</div>
+ <div class="menuitem" onclick="openApp('files');toggleMenu()">Files</div>
+ <div class="menuitem" onclick="openApp('browser');toggleMenu()">Browser</div>
+ <div class="menuitem" onclick="openApp('system');toggleMenu()">System Monitor</div>
+ <div class="menuitem" onclick="openApp('settings');toggleMenu()">Settings</div>
+ <div class="menuitem" onclick="location.reload()">Reboot</div>
+</div>
+
+<div id="taskbar">
+ <button id="start" onclick="toggleMenu()">C</button>
+ <button class="task" onclick="openApp('terminal')">Terminal</button>
+ <button class="task" onclick="openApp('files')">Files</button>
+ <button class="task" onclick="openApp('browser')">Browser</button>
+ <div class="spacer"></div>
+ <div class="clock" id="clock"></div>
+</div>
+
+<script>
+let topZ=10;
+setTimeout(()=>document.getElementById('boot').classList.add('hide'),2100);
+function openApp(id){
+  const w=document.getElementById(id);w.classList.add('active');w.style.zIndex=++topZ;
+}
+function closeApp(id){document.getElementById(id).classList.remove('active')}
+function toggleMenu(){document.getElementById('menu').classList.toggle('show')}
+document.addEventListener('click',e=>{if(!e.target.closest('#menu')&&!e.target.closest('#start'))document.getElementById('menu').classList.remove('show')});
+function updateClock(){
+ const d=new Date();document.getElementById('clock').innerHTML=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'<br>'+d.toLocaleDateString();
+}
+setInterval(updateClock,1000);updateClock();
+function goSearch(){
+ const q=document.getElementById('search').value.trim();if(!q)return;
+ const url=/^https?:\/\//i.test(q)?q:'https://www.google.com/search?q='+encodeURIComponent(q);window.open(url,'_blank');
+}
+document.getElementById('search').addEventListener('keydown',e=>{if(e.key==='Enter')goSearch()});
+const input=document.getElementById('terminput'),out=document.getElementById('termout');
+input.addEventListener('keydown',e=>{
+ if(e.key!=='Enter')return;
+ const cmd=input.value.trim();out.textContent+='\nroot@cyberos:~$ '+cmd+'\n';
+ const [c,...a]=cmd.split(' ');
+ const responses={
+  help:'Commands: help, clear, date, whoami, status, echo, open, reboot',
+  date:new Date().toString(),whoami:'root',status:'SYSTEM ONLINE\nNETWORK SECURE\nFIREWALL ACTIVE'
+ };
+ if(c==='clear')out.textContent='';
+ else if(c==='echo')out.textContent+=a.join(' ');
+ else if(c==='open'&&a[0])openApp(a[0]);
+ else if(c==='reboot')location.reload();
+ else out.textContent+=(responses[c]??('command not found: '+c));
+ input.value='';out.scrollTop=out.scrollHeight;
+});
+function swapAccent(){
+ const root=document.documentElement;const current=getComputedStyle(root).getPropertyValue('--accent').trim();
+ root.style.setProperty('--accent',current==='#ff7a00'?'#ff3d9a':'#ff7a00');
+}
+document.querySelectorAll('.window').forEach(w=>{
+ const bar=w.querySelector('.titlebar');let drag=false,ox=0,oy=0;
+ bar.addEventListener('mousedown',e=>{drag=true;w.style.transform='none';const r=w.getBoundingClientRect();w.style.left=r.left+'px';w.style.top=r.top+'px';ox=e.clientX-r.left;oy=e.clientY-r.top;w.style.zIndex=++topZ});
+ window.addEventListener('mousemove',e=>{if(!drag)return;w.style.left=Math.max(0,Math.min(innerWidth-w.offsetWidth,e.clientX-ox))+'px';w.style.top=Math.max(0,Math.min(innerHeight-60-w.offsetHeight,e.clientY-oy))+'px'});
+ window.addEventListener('mouseup',()=>drag=false);
+ w.addEventListener('mousedown',()=>w.style.zIndex=++topZ);
+});
+setInterval(()=>{
+ document.getElementById('cpu').textContent='Usage '+(20+Math.floor(Math.random()*45))+'% · 8 virtual cores';
+ document.getElementById('ram').textContent=(3+Math.random()*2).toFixed(1)+' GB / 8 GB allocated';
+},1800);
+</script>
+</body>
+</html>
