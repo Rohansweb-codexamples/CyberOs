@@ -56,7 +56,7 @@ const defaults={setup:true,business:false,name:'Operator',company:'CYBER NETWORK
 {id:'dashboard',name:'System Dashboard',type:'app',icon:'SYS'},
 {id:'pages',name:'HTML Pages',type:'app',icon:'<>',pages:[{name:'Home',html:'<h1>CyberOS Page</h1><p>Edit this page in the HTML Pages app.</p>'}]}
 ],websites:[]};
-let state=JSON.parse(localStorage.getItem(STORE)||'null')||structuredClone(defaults);state.serverUrl=state.serverUrl||location.origin;
+let state;try{state=JSON.parse(localStorage.getItem(STORE)||'null')||structuredClone(defaults)}catch(e){state=structuredClone(defaults);localStorage.removeItem(STORE)}state=Object.assign(structuredClone(defaults),state);state.apps=Array.isArray(state.apps)?state.apps:structuredClone(defaults.apps);state.websites=Array.isArray(state.websites)?state.websites:[];state.serverUrl=typeof state.serverUrl==='string'&&state.serverUrl?state.serverUrl:location.origin;
 const themes={cyber:{name:'Cyber Neon',cyan:'#00f6ff',pink:'#ff2bd6',lime:'#a6ff00',bg:'#02040a'},matrix:{name:'Matrix',cyan:'#00ff66',pink:'#00cc44',lime:'#b6ff00',bg:'#020b06'},violet:{name:'Violet Pulse',cyan:'#b36bff',pink:'#ff4fd8',lime:'#f0a6ff',bg:'#08020f'},sunset:{name:'Neon Sunset',cyan:'#ffb000',pink:'#ff3b7a',lime:'#ffe600',bg:'#0d0402'},ice:{name:'Ice Grid',cyan:'#75e6ff',pink:'#8fb8ff',lime:'#d9ffff',bg:'#020912'}};
 
 let z=100, windows=new Map(), drag=null, setupStep=0;
@@ -151,7 +151,7 @@ function finishSetup(){state.company=$('scompany').value||state.company;state.ac
 $('start').onclick=()=>{$('startmenu').style.display=$('startmenu').style.display==='block'?'none':'block'};
 $('appSearch').oninput=e=>document.querySelectorAll('#menuapps [data-open]').forEach(b=>b.parentElement.style.display=b.innerText.toLowerCase().includes(e.target.value.toLowerCase())?'':'none');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('startmenu').style.display='none';if(e.key==='F1'){e.preventDefault();openSetup(true)}});
-setTimeout(()=>{$('boot').style.display='none';applyTheme(state.theme||'cyber');renderIcons();updateMode();if(state.setup)openSetup();},1600);
+setTimeout(()=>{try{$('boot').style.display='none';applyTheme(state.theme||'cyber');renderIcons();updateMode();if(state.setup)openSetup()}catch(e){console.error('CyberOS startup failed',e);$('boot').style.display='none';alert('CyberOS recovered from a saved-settings error. Reload the page.')}},1600);
 window.addEventListener('resize',()=>{if(innerWidth<650)document.body.classList.add('mobile')});
 if(innerWidth<650)document.body.classList.add('mobile');
 </script>
