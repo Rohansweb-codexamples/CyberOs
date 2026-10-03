@@ -151,7 +151,7 @@ function finishSetup(){state.company=$('scompany').value||state.company;state.ac
 $('start').onclick=()=>{$('startmenu').style.display=$('startmenu').style.display==='block'?'none':'block'};
 $('appSearch').oninput=e=>document.querySelectorAll('#menuapps [data-open]').forEach(b=>b.parentElement.style.display=b.innerText.toLowerCase().includes(e.target.value.toLowerCase())?'':'none');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('startmenu').style.display='none';if(e.key==='F1'){e.preventDefault();openSetup(true)}});
-try{$('boot').style.display='none';applyTheme(state.theme||'cyber');renderIcons();updateMode();if(state.setup!==false)openSetup()}catch(e){console.error('CyberOS startup failed',e);$('boot').style.display='none';}
+try{$('boot').style.display='none';applyTheme(state.theme||'cyber');renderIcons();updateMode();if(state.setup!==false && !location.pathname.endsWith('/setup.html')){location.href='setup.html';}}catch(e){console.error('CyberOS startup failed',e);$('boot').style.display='none';}
 window.addEventListener('resize',()=>{if(innerWidth<650)document.body.classList.add('mobile')});
 if(innerWidth<650)document.body.classList.add('mobile');
 </script>
