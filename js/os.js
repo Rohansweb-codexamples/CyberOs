@@ -6,7 +6,7 @@ const STORE = 'cyberos-v2-state';
 const defaults = {
   setup: true, setupVersion: 3, business: false,
   name: 'Operator', company: 'CYBER NETWORK', accent: '#00f6ff',
-  theme: 'cyber', serverUrl: '',
+  theme: 'cyber', serverUrl: 'https://cyberos-a5ps.onrender.com',
   apps: DEFAULT_APPS.map(a => ({...a})),
   websites: [],
 };
@@ -33,7 +33,7 @@ function appById(id) { return state.apps.find(a => a.id === id) || state.website
 // ─── Clock ───
 function clock() {
   let d = new Date();
-  $('clock').textContent = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + '  ' + d.toLocaleDateString([], {day:'2-digit',month:'short'});
+  $('clock').innerHTML = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + '<br>' + d.toLocaleDateString([], {day:'2-digit',month:'short',year:'numeric'});
 }
 setInterval(clock, 1000); clock();
 
@@ -72,6 +72,22 @@ function closeWin(id) {
   w.remove(); windows.delete(id); renderTasks();
 }
 function minimizeWin(id) { let w = windows.get(id); if (w) w.style.display = 'none'; }
+function toggleMax(id) {
+  let w = windows.get(id); if (!w) return;
+  if (w.dataset.max === '1') {
+    w.dataset.max = '0';
+    w.style.width = w.dataset.prevW || '';
+    w.style.height = w.dataset.prevH || '';
+    w.style.left = w.dataset.prevL || '';
+    w.style.top = w.dataset.prevT || '';
+  } else {
+    w.dataset.max = '1';
+    w.dataset.prevW = w.style.width; w.dataset.prevH = w.style.height;
+    w.dataset.prevL = w.style.left; w.dataset.prevT = w.style.top;
+    w.style.left = '8px'; w.style.top = '8px';
+    w.style.width = 'calc(100vw - 16px)'; w.style.height = 'calc(100vh - 70px)';
+  }
+}
 function restoreWin(id) { let w = windows.get(id); if (w) { w.style.display = 'flex'; focusWin(w); } }
 
 function renderTasks() {
@@ -92,10 +108,11 @@ function makeWindow(id, title, body) {
   const x = 40 + (windows.size % 5) * 28, y = 75 + (windows.size % 4) * 26;
   w.style.left = Math.min(x, Math.max(8, innerWidth-300)) + 'px';
   w.style.top = Math.min(y, Math.max(58, innerHeight-260)) + 'px';
-  w.innerHTML = `<div class="titlebar"><span class="title">${esc(title)}</span><button class="winbtn" data-min>_</button><button class="winbtn close" data-close>X</button></div><div class="content">${body}</div>`;
+  w.innerHTML = `<div class="titlebar"><span class="title">${esc(title)}</span><div class="win-controls"><button class="winbtn" data-min title="Minimize">&#8211;</button><button class="winbtn" data-max title="Maximize">&#9633;</button><button class="winbtn close" data-close title="Close">&#10005;</button></div></div><div class="content">${body}</div>`;
   $('desktop').appendChild(w); windows.set(id, w); focusWin(w); renderTasks();
   w.querySelector('[data-close]').onclick = () => closeWin(id);
   w.querySelector('[data-min]').onclick = () => minimizeWin(id);
+  w.querySelector('[data-max]').onclick = () => toggleMax(id);
   w.addEventListener('pointerdown', () => focusWin(w));
   // Dragging
   const bar = w.querySelector('.titlebar');
@@ -131,7 +148,7 @@ function openApp(id) {
   // Look up app content generator
   const app = APPS[id];
   if (app) {
-    const w = makeWindow(id, a.name, app.html ? app.html(w) : '');
+    const w = makeWindow(id, a.name, app.html ? app.html() : '');
     // Execute init if present
     if (app.init) {
       try { app.init(w); } catch(e) { console.error('App init error:', id, e); }
